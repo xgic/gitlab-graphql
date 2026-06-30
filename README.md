@@ -74,12 +74,12 @@ See `ARCHITECTURE.md` and `docs/development-workflow.md` for layout and responsi
 
 ## Documentation
 
-- [ADR-001-GitLab-GraphQL-Client.md](ADR-001-GitLab-GraphQL-Client.md)
+- [docs/ADR-001-GitLab-GraphQL-Client.md](docs/ADR-001-GitLab-GraphQL-Client.md)
 - [ARCHITECTURE.md](ARCHITECTURE.md)
 - [docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md](docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md)
 - [docs/development-workflow.md](docs/development-workflow.md)
 - [docs/grok-playbooks.md](docs/grok-playbooks.md)
-- [GROK_BUILD_INTEGRATION.md](GROK_BUILD_INTEGRATION.md)
+- [docs/GROK_BUILD_INTEGRATION.md](docs/GROK_BUILD_INTEGRATION.md)
 
 ## Engineering Tooling Philosophy
 

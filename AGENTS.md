@@ -51,8 +51,8 @@ This session supports exact ID "XGIC GitLab GraphQL Client".
 
 ## References (High-Level)
 
-- ARCHITECTURE.md
-- ADR-001-GitLab-GraphQL-Client.md
+- docs/ARCHITECTURE.md
+- docs/ADR-001-GitLab-GraphQL-Client.md
 - docs/development-workflow.md
 - docs/grok-playbooks.md
 - docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md

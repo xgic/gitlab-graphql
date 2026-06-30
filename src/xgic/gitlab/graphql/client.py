@@ -547,7 +547,7 @@ class GitLabClient:
         """
         raise NotImplementedError(
             "create_merge_request() is not yet implemented. "
-            "See GRAPHQL_OPERATIONS_CONTRACT.md for the planned shape."
+            "See docs/GRAPHQL_OPERATIONS_CONTRACT.md for the planned shape."
         )
 
     # -------------------------------------------------------------------------

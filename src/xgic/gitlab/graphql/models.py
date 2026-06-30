@@ -1,7 +1,7 @@
 """Domain models for the XGIC GitLab GraphQL Client.
 
 Uses frozen dataclasses + from_graphql factory methods per the architecture
-defined in DOMAIN_MODELS_AND_HIERARCHY_PARSING.md.
+defined in docs/DOMAIN_MODELS_AND_HIERARCHY_PARSING.md.
 
 These provide clean, typed objects instead of raw dicts for all consumers
 including Grok Build.

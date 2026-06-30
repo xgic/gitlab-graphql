@@ -205,4 +205,4 @@ This ADR will be updated as implementation reveals new constraints or opportunit
 **Related Documents**
 - `README.md` – Project overview and quick start
 - `ARCHITECTURE.md` – Detailed package structure and design decisions
-- `GROK_BUILD_INTEGRATION.md` – How Grok Build consumes the client
+- `docs/GROK_BUILD_INTEGRATION.md` – How Grok Build consumes the client

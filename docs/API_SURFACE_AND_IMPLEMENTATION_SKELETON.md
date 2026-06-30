@@ -3,7 +3,7 @@
 **Document Version:** 1.0  
 **Date:** June 27, 2026  
 **Status:** Proposed / Architecture-Level Definition  
-**Related ADR:** ADR-001-GitLab-GraphQL-Client.md
+**Related ADR:** docs/ADR-001-GitLab-GraphQL-Client.md
 
 ---
 
@@ -335,6 +335,6 @@ def create_issue_with_tasks(self, issue_title, issue_description, tasks, labels=
 
 ---
 
-**This document, together with ADR-001, README.md, ARCHITECTURE.md, and GROK_BUILD_INTEGRATION.md, provides a complete, self-contained architecture package** that a fresh Grok Build session can use to implement the client correctly and consistently.
+**This document, together with docs/ADR-001-GitLab-GraphQL-Client.md, README.md, ARCHITECTURE.md, and docs/GROK_BUILD_INTEGRATION.md, provides a complete, self-contained architecture package** that a fresh Grok Build session can use to implement the client correctly and consistently.
 
 Would you like me to now create the next artifact (e.g., detailed models definition or the GraphQL operations contract), or make any adjustments to this API surface before we lock it?

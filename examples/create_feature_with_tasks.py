@@ -17,9 +17,9 @@ Why this pattern is preferred for Grok Build and automation:
 - Resilient partial-failure handling built in
 
 See also:
-- ADR-001-GitLab-GraphQL-Client.md
+- docs/ADR-001-GitLab-GraphQL-Client.md
 - XGIC_GROK_BUILD_QUICK_START.md
-- DOMAIN_MODELS_AND_HIERARCHY_PARSING.md
+- docs/DOMAIN_MODELS_AND_HIERARCHY_PARSING.md
 """
 
 import os
