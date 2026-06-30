@@ -70,12 +70,12 @@ print(f"Tasks created under it.")
 
 ## Project Structure
 
-See `ARCHITECTURE.md` and `docs/development-workflow.md` for layout and responsibilities.
+See `docs/ARCHITECTURE.md` and `docs/development-workflow.md` for layout and responsibilities.
 
 ## Documentation
 
 - [docs/ADR-001-GitLab-GraphQL-Client.md](docs/ADR-001-GitLab-GraphQL-Client.md)
-- [ARCHITECTURE.md](ARCHITECTURE.md)
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - [docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md](docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md)
 - [docs/development-workflow.md](docs/development-workflow.md)
 - [docs/grok-playbooks.md](docs/grok-playbooks.md)
