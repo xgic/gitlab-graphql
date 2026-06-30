@@ -18,7 +18,7 @@ All implementations in `src/xgic/gitlab/graphql/graphql/operations.py` **must** 
 - Clean separation between domain logic and raw GraphQL
 - Consistent error and response handling
 
-This contract is derived from GitLab’s official Work Items GraphQL schema (as of GitLab 18.x / mid-2026) and aligns with the domain models defined in `docs/DOMAIN_MODELS_AND_HIERARCHY_PARSING.md`.
+This contract is derived from GitLab’s official Work Items GraphQL schema (as of GitLab 18.x / mid-2026) and aligns with the domain models defined in `DOMAIN_MODELS_AND_HIERARCHY_PARSING.md`.
 
 ---
 
@@ -28,7 +28,7 @@ This contract is derived from GitLab’s official Work Items GraphQL schema (as 
 2. **Widgets for structured data** — Hierarchy, labels, milestone, etc., are passed via the `widgets` array.
 3. **Global IDs everywhere** — Use `gid://gitlab/WorkItem/...` and `gid://gitlab/WorkItems::Type/...` IDs.
 4. **Two-phase creation for hierarchy** — Parent first, then children with `hierarchyWidget`.
-5. **Resilient orchestration** — `create_issue_with_tasks` continues on individual task failures (documented in `docs/API_SURFACE_AND_IMPLEMENTATION_SKELETON.md`).
+5. **Resilient orchestration** — `create_issue_with_tasks` continues on individual task failures (documented in `API_SURFACE_AND_IMPLEMENTATION_SKELETON.md`).
 6. **First-class error surfacing** — GraphQL `errors` array is always checked.
 
 ---
@@ -154,7 +154,7 @@ workItemCreate(input: $input) {
 }
 ```
 
-The Python `from_graphql` factory methods in `models.py` (`Issue.from_graphql`, `Task.from_graphql`) are responsible for parsing the `widgets` array to extract `parent_id` (see `docs/DOMAIN_MODELS_AND_HIERARCHY_PARSING.md` for the exact algorithm).
+The Python `from_graphql` factory methods in `models.py` (`Issue.from_graphql`, `Task.from_graphql`) are responsible for parsing the `widgets` array to extract `parent_id` (see `DOMAIN_MODELS_AND_HIERARCHY_PARSING.md` for the exact algorithm).
 
 ---
 
@@ -223,9 +223,9 @@ This contract guarantees **resilience** for Grok Build usage (one bad task descr
 
 ## 9. References & Alignment
 
-- **docs/ADR-001-GitLab-GraphQL-Client.md** — Overall decision and scope
-- **docs/API_SURFACE_AND_IMPLEMENTATION_SKELETON.md** — Public method signatures
-- **docs/DOMAIN_MODELS_AND_HIERARCHY_PARSING.md** — How responses are turned into `Issue` / `Task` objects
+- **ADR-001-GitLab-GraphQL-Client.md** — Overall decision and scope
+- **API_SURFACE_AND_IMPLEMENTATION_SKELETON.md** — Public method signatures
+- **DOMAIN_MODELS_AND_HIERARCHY_PARSING.md** — How responses are turned into `Issue` / `Task` objects
 - **pyproject.toml** — Build system (`hatchling` + `uv`)
 - Official GitLab docs: Work Items widgets and GraphQL reference (docs.gitlab.com)
 

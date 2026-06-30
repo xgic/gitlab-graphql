@@ -322,7 +322,7 @@ This model layer, combined with the previously defined `GitLabClient` public API
 **End of Document**
 
 *This file is part of the complete architecture package for the XGIC GitLab GraphQL Client (`xgic-gitlab-graphql`, namespace `xgic.gitlab.graphql`). It should be read together with:*
-- `docs/ADR-001-GitLab-GraphQL-Client.md`
+- `ADR-001-GitLab-GraphQL-Client.md`
 - `ARCHITECTURE.md`
-- `docs/API_SURFACE_AND_IMPLEMENTATION_SKELETON.md`
-- `docs/GROK_BUILD_INTEGRATION.md`
+- `API_SURFACE_AND_IMPLEMENTATION_SKELETON.md`
+- `GROK_BUILD_INTEGRATION.md`
