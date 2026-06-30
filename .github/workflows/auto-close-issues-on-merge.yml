@@ -1,0 +1,40 @@
+name: Auto-close issues on PR merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  close-issues:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: read
+    steps:
+      - name: Close linked issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const body = pr.body || '';
+            const issueRegex = /(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/gi;
+            let match;
+            const issuesToClose = new Set();
+            while ((match = issueRegex.exec(body)) !== null) {
+              issuesToClose.add(match[1]);
+            }
+            // Also check for linked issues via GitHub's "Development" section if possible, but body is primary
+            for (const issueNumber of issuesToClose) {
+              try {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: parseInt(issueNumber),
+                  state: 'closed'
+                });
+                console.log(`Closed issue #${issueNumber}`);
+              } catch (error) {
+                console.error(`Failed to close issue #${issueNumber}: ${error.message}`);
+              }
+            }

@@ -25,6 +25,7 @@ Follow GitHub Flow.
 - Review and approval required before any remote action or merge to main — see AGENTS.md and BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md.
 - All checks must pass.
 - Approval performed in GitHub web UI.
+- Include "Closes #X", "Fixes #X", or "Resolves #X" in PR body/commits to auto-close issues on merge (see .github/workflows/auto-close-issues-on-merge.yml and PR template).
 
 ## No Makefiles
 Use pyproject + uv/pip + ruff/pytest. See pyproject.toml.
