@@ -1,0 +1,85 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.conda/
+
+# Testing / Coverage
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Type checking / linting caches
+.pyright/
+.pytype/
+.ruff_cache/
+.mypy_cache/
+
+# IDE / Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / tokens (never commit)
+.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# Logs / runtime
+*.log
+logs/
+
+# Temporary files from development / Grok
+temp.md
+files-*.zip
+
+# Grok Build / AI local artifacts (MANDATORY — never commit per status reporting standard)
+# Temporary Grok Build coordination artifacts (status reports, etc.) — never commit.
+# This directory must be listed in .gitignore for every repository per the XGIC status reporting rule.
+.xgic/
+
+# Hatch / build / uv
+.hatch/
+uv.lock
+
+# End of .gitignore for XGIC GitLab GraphQL Client (Python library + public exemplary)
