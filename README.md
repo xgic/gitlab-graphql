@@ -13,7 +13,7 @@ The official XGIC GitLab GraphQL Client — a clean, extensible, Python-first cl
 
 ## Key Features (Phase 1)
 
-- High-level methods: `create_issue()`, `create_task(parent_id)`, `create_issue_with_tasks()`, `create_merge_request()`
+- High-level methods: `create_issue()`, `create_task(parent_id)`, `create_issue_with_tasks()` (create_merge_request() is a placeholder stub)
 - Proper parent-child Task hierarchy via GitLab Work Items
 - Clean data models (`Issue`, `Task`, `MergeRequest`) instead of raw dicts
 - Centralized error handling and GraphQL execution
@@ -47,6 +47,7 @@ client = GitLabClient(
 issue = client.create_issue(
     title="Implement new reporting feature",
     description="High-level description here...",
+    namespace_path="group/project",
     labels=["feature", "backend"],
 )
 
@@ -54,12 +55,14 @@ issue = client.create_issue(
 task1 = client.create_task(
     parent_id=issue.id,
     title="Design database schema",
-    description="..."
+    description="...",
+    namespace_path="group/project",
 )
 
 task2 = client.create_task(
     parent_id=issue.id,
     title="Implement API endpoints",
+    namespace_path="group/project",
 )
 
 print(f"Issue created: {issue.web_url}")

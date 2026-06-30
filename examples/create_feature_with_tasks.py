@@ -72,6 +72,7 @@ def main() -> None:
                 "description": "Add 'Login with Corporate SSO' button and handle the OAuth redirect + token storage.",
             },
         ],
+        namespace_path="group/project",
         labels=["feature", "security", "oauth2", "sso"],
     )
 

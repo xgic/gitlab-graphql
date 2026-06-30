@@ -48,12 +48,13 @@ Can contain multiple paragraphs.""",
         {"title": "Implement backend changes", "description": "Details..."},
         {"title": "Update frontend and tests", "description": "Details..."},
     ],
+    namespace_path="group/project",
     labels=["refactor", "security", "backend"]
 )
 
 # Or step-by-step when more control is needed
-issue = client.create_issue(title=..., description=..., labels=...)
-task = client.create_task(parent_id=issue.id, title=..., description=...)
+issue = client.create_issue(title=..., description=..., namespace_path="group/project", labels=...)
+task = client.create_task(parent_id=issue.id, title=..., description=..., namespace_path="group/project")
 ```
 
 ### 4. Error Handling
