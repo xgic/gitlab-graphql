@@ -152,10 +152,11 @@ def create_issue_with_tasks(
     {
         "issue": Issue,                    # The created parent
         "tasks": List[Task],               # Successfully created children
-        "partial_errors": Optional[List[Dict]],  # Details of any failures
+        "failed_tasks": List[Dict],        # Details of any failures
         "success_count": int,
-        "total_requested": int,
-        "web_url": str                     # Convenience: parent issue URL
+        "total_tasks": int,
+        "web_url": str,                    # Convenience: parent issue URL
+        "partial_failure": bool
     }
 
     Preconditions:
@@ -168,7 +169,7 @@ def create_issue_with_tasks(
     """
 ```
 
-#### `create_merge_request`
+#### `create_merge_request` (stub, not implemented)
 
 ```python
 def create_merge_request(
@@ -180,7 +181,7 @@ def create_merge_request(
     labels: Optional[List[str]] = None,
 ) -> MergeRequest:
     """
-    Create a new Merge Request.
+    Placeholder for Merge Request creation (raises NotImplementedError).
 
     Phase 1 scope is intentionally minimal. Future versions will add
     support for draft status, assignee, reviewer, etc.
@@ -278,22 +279,19 @@ def create_issue_with_tasks(self, issue_title, issue_description, tasks, labels=
             # else: continue (resilient mode — recommended default for Grok Build)
 
     # === Step 3: Build Structured Result ===
-    result = {
+    success_count = len(created_tasks)
+    total_tasks = len(tasks)
+    partial_failure = len(failed_tasks) > 0
+
+    return {
         "issue": parent_issue,
         "tasks": created_tasks,
-        "partial_errors": partial_errors if partial_errors else None,
-        "success_count": len(created_tasks),
-        "total_requested": len(tasks),
+        "failed_tasks": failed_tasks,
+        "success_count": success_count,
+        "total_tasks": total_tasks,
         "web_url": parent_issue.web_url,
-        "success": len(partial_errors) == 0,
+        "partial_failure": partial_failure,
     }
-
-    if partial_errors:
-        # Future: emit structured log event or metric for observability
-        # e.g., logger.warning("create_issue_with_tasks partial failure", extra=result)
-        pass
-
-    return result
 ```
 
 ### 3.3 Key Design Decisions & Rationale
@@ -301,7 +299,7 @@ def create_issue_with_tasks(self, issue_title, issue_description, tasks, labels=
 | Decision | Rationale | Alignment with Vision |
 |----------|-----------|-----------------------|
 | **Continue on error by default** (`fail_fast=False`) | Grok Build often works on complex, long-running tasks. Losing partial progress is worse than having some tasks created. | Resilience for automation |
-| **Return structured dict instead of custom dataclass** | Easy for Grok Build / LLM to parse and reason about (`success_count`, `partial_errors`). No new model class needed in Phase 1. | Grok Build friendliness |
+| **Return structured dict instead of custom dataclass** | Easy for Grok Build / LLM to parse and reason about (`success_count`, `failed_tasks`). No new model class needed in Phase 1. | Grok Build friendliness |
 | **Parent creation is atomic (fail fast)** | If the parent cannot be created, there is no point proceeding. The parent is the anchor for all child hierarchy. | Data integrity |
 | **No automatic rollback / cleanup** | GitLab does not provide easy transactional multi-mutation support for Work Items. Documented limitation. Future: optional "cleanup on failure" via separate delete calls (dangerous). | Honest API contract |
 | **Use global ID (`parent_issue.id`) for `create_task`** | Required by GitLab’s Work Item hierarchy widget in GraphQL. The model’s `from_graphql` ensures this is always populated correctly. | Correct use of GitLab Work Items model |

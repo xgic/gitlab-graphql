@@ -190,7 +190,7 @@ We conducted a thorough evaluation of available options in June 2026 before sele
 ## Next Steps
 
 1. Finalize package structure and module responsibilities (see ARCHITECTURE.md).
-2. Implement core `GitLabClient` class with `_execute()` central method and high-level public API (`create_issue`, `create_task`, `create_issue_with_tasks`, `create_merge_request`).
+2. Implement core `GitLabClient` class with `_execute()` central method and high-level public API (`create_issue`, `create_task`, `create_issue_with_tasks`; `create_merge_request()` is a stub).
 3. Define data models (`Issue`, `Task`, `MergeRequest`, etc.) using dataclasses and `from_graphql` factory methods.
 4. Implement configuration, authentication, and custom exception hierarchy.
 5. Add basic tests for cross-platform compatibility and error paths.

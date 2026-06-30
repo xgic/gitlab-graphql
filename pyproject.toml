@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "xgic-gitlab-graphql"
-version = "0.1.0"
+version = "0.1.1"
 description = "XGIC GitLab GraphQL Client — A high-level, extensible Python client for GitLab's GraphQL API with first-class support for Work Items, hierarchical Tasks, Merge Requests, and automation use cases (including Grok Build)."
 readme = "README.md"
 license = { text = "MIT" }
@@ -14,7 +14,6 @@ authors = [
 requires-python = ">=3.12"
 dependencies = [
     "requests>=2.31.0",
-    "pydantic>=2.7",  # Used for configuration/validation where applicable (models remain lightweight dataclasses for minimal surface)
 ]
 keywords = [
     "gitlab",

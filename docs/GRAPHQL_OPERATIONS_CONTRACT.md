@@ -25,7 +25,7 @@ This contract is derived from GitLab’s official Work Items GraphQL schema (as 
 ## 2. Core Principles
 
 1. **Work Items over legacy Issues API** — All hierarchy-capable entities use `workItemCreate`.
-2. **Widgets for structured data** — Hierarchy, labels, milestone, etc., are passed via the `widgets` array.
+2. **Top-level widgets for create** — For `workItemCreate`, hierarchy is passed via top-level `hierarchyWidget` (not nested in `widgets` array for creation). Labels/milestones use dedicated top-level fields.
 3. **Global IDs everywhere** — Use `gid://gitlab/WorkItem/...` and `gid://gitlab/WorkItems::Type/...` IDs.
 4. **Two-phase creation for hierarchy** — Parent first, then children with `hierarchyWidget`.
 5. **Resilient orchestration** — `create_issue_with_tasks` continues on individual task failures (documented in `API_SURFACE_AND_IMPLEMENTATION_SKELETON.md`).
@@ -104,21 +104,17 @@ input WorkItemWidgetHierarchyCreateInput {
     "workItemTypeId": "gid://gitlab/WorkItems::Type/TASK_TYPE_ID",
     "title": "Implement login endpoint",
     "description": "Add JWT-based authentication...",
-    "widgets": [
-      {
-        "hierarchyWidget": {
-          "parentId": "gid://gitlab/WorkItem/987654321"
-        }
-      }
-    ]
+    "hierarchyWidget": {
+      "parentId": "gid://gitlab/WorkItem/987654321"
+    }
   }
 }
 ```
 
 **Important rules:**
 - `parentId` **must** be the global Work Item ID returned from a previous `workItemCreate` (or fetched via query).
-- Only one hierarchy widget per `workItemCreate` call.
-- Creating a top-level Issue **omits** the `widgets` array or supplies other widgets only.
+- `hierarchyWidget` is top-level in the `input` for create (not wrapped in `widgets` array).
+- Creating a top-level Issue omits `hierarchyWidget`.
 
 ---
 

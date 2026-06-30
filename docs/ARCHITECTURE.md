@@ -28,20 +28,14 @@ xgic-gitlab-graphql/
 │               ├── exceptions.py               # Custom exception hierarchy (GitLabError, GraphQLError, etc.)
 │               ├── graphql/
 │               │   ├── __init__.py
-│               │   ├── queries.py              # Reusable query strings (read operations)
-│               │   └── operations.py           # Mutation strings + thin wrapper functions
-│               └── utils/
-│                   ├── __init__.py
-│                   └── validators.py           # Input validation helpers (optional in Phase 1)
+│               │   └── operations.py           # All GraphQL queries, mutations, builders (centralized; no separate queries.py)
 ├── tests/
 │   ├── __init__.py
-│   ├── test_client.py
-│   ├── test_models.py
-│   └── test_operations.py
+│   └── test_client.py
 ├── pyproject.toml                      # Modern Python packaging (PEP 621)
 ├── README.md
-├── ARCHITECTURE.md
-├── ADR-001-GitLab-GraphQL-Client.md
+├── docs/ARCHITECTURE.md
+├── docs/ADR-001-GitLab-GraphQL-Client.md
 └── LICENSE
 ```
 
@@ -60,7 +54,7 @@ xgic-gitlab-graphql/
   - `create_issue(...)`
   - `create_task(parent_id, ...)`
   - `create_issue_with_tasks(issue_title, tasks=[...])` ← **highly recommended for Grok Build**
-  - `create_merge_request(...)`
+  - `create_merge_request(...)` (stub)
   - Future: `update_work_item(...)`, `get_work_item(...)`, bulk operations, etc.
 - All GraphQL execution funnels through a private `_execute(query, variables)` method.
 - Handles authentication header injection, timeout, basic retry logic, and error translation.
@@ -74,8 +68,7 @@ xgic-gitlab-graphql/
 ### `models.py`
 - Uses `@dataclass` for clean, immutable-friendly data containers (Pydantic where applicable in future).
 - `BaseWorkItem` as common base for Issue / Task (DRY).
-- Each model has a `from_graphql(cls, data: dict)` classmethod.
-- Added for full support.
+- Each model has a `from_graphql(cls, data: dict)` classmethod (explicit kwargs for frozen safety).
 - Easy to extend later with new fields (estimates, actuals, custom widgets, hierarchy info).
 - Provides `web_url`, human-readable `iid`, global `id`, etc.
 
@@ -85,16 +78,13 @@ xgic-gitlab-graphql/
 - `AuthenticationError`, `RateLimitError`, `ValidationError` as needed.
 - Keeps error handling consistent and actionable.
 
-### `graphql/operations.py` (and `queries.py`)
+### `graphql/operations.py`
 - **Never** put raw GraphQL strings in `client.py`.
-- All mutation strings live here (or in small helper functions that return the string + variables).
+- All queries, mutations, and builders live here (centralized; no separate queries.py).
 - Keeps the client clean and makes it easy to evolve or version queries.
 - Thin wrapper functions can assemble the final payload if needed.
 
-### `utils/validators.py`
-- Optional in early phases.
-- Central place for title length checks, label validation, ID format validation, etc.
-- Prevents bad data from reaching GitLab.
+(Note: No `utils/validators.py` in current implementation; validation is inline in client methods.)
 
 ## Key Design Patterns & Decisions
 
@@ -130,8 +120,8 @@ Example instruction you can give Grok Build:
 
 ## Testing Strategy (High Level)
 
-- Unit tests for models (`from_graphql` mapping).
-- Unit tests for `_execute` error paths and happy paths (mocked responses).
+- Unit tests primarily in `test_client.py` (covers client flows, model parsing via mocks/integration, error paths, pagination, partial failures).
+- No separate `test_models.py` or `test_operations.py`.
 - Integration tests (optional, against a test GitLab instance or GitLab.com sandbox) for the most critical flows: `create_issue_with_tasks`.
 - Cross-platform checks on Windows + Linux.
 

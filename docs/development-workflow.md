@@ -18,6 +18,7 @@ Follow GitHub Flow.
 - pyright type check.
 - pytest.
 - Security / leakage scan (high-level only, no private refs).
+- After code changes, audit docs (README, examples, design docs) for synchronization with code (see code-doc-synchronization-report.md).
 
 ## PRs
 - Open PR from branch.

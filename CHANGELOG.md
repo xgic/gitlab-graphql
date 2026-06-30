@@ -5,6 +5,13 @@ All notable changes to the **XGIC GitLab GraphQL Client** (`xgic-gitlab-graphql`
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-06-30
+
+### Fixed
+- Code recovery after history cleanup (full implementation restored).
+- Documentation synchronization (updated examples/claims/return shapes to match code; moved design docs + ARCHITECTURE.md to docs/).
+- Removed unused pydantic dependency.
+
 ## [Unreleased]
 
 ### Added
@@ -14,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Common queries: get_current_user, list/iter work items.
 - Domain models: BaseWorkItem, Issue, Task, MergeRequest with from_graphql factories.
 - Full package layout (xgic.gitlab.graphql namespace), __init__ exports.
-- pyproject.toml updated: Python >=3.12, pydantic (applicable), ruff (Google), pyright, hatchling, pytest.
+- pyproject.toml updated: Python >=3.12, ruff (Google), pyright, hatchling, pytest.
 - Base standards: AGENTS.md, docs/, .github templates, .gitignore, CONTRIBUTING.md, DEV-JOURNAL, GROK-TASKS, LICENSE.
 - Pagination follows GitLab Relay-style (pageInfo, first/after).
 - Example usage script.
@@ -22,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated tooling to XGIC CLI standard + no Makefiles.
 - README, ARCHITECTURE references, docs aligned.
+- Removed unused pydantic dependency (models remain lightweight dataclasses).
 
 ### Security / Public
 - All artifacts sanitized. No private details.
@@ -30,7 +38,8 @@ See ADR-001 and primary plan for context (high-level only).
 
 
 ### Fixed
-- 
+- Code recovery after history cleanup (full implementation restored).
+- Documentation synchronization (updated examples/claims/return shapes to match code; moved design docs + ARCHITECTURE.md to docs/).
 
 ### Security
 - 
