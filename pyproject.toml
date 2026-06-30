@@ -1,0 +1,151 @@
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "xgic-gitlab-graphql"
+version = "0.1.0"
+description = "XGIC GitLab GraphQL Client — A high-level, extensible Python client for GitLab's GraphQL API with first-class support for Work Items, hierarchical Tasks, Merge Requests, and automation use cases (including Grok Build)."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "XGIC Foundation", email = "dev@xgic.net" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "requests>=2.31.0",
+    "pydantic>=2.7",  # Used for configuration/validation where applicable (models remain lightweight dataclasses for minimal surface)
+]
+keywords = [
+    "gitlab",
+    "graphql",
+    "work-items",
+    "tasks",
+    "hierarchy",
+    "automation",
+    "xgic",
+    "devsecops",
+    "grok-build",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/xgic/gitlab-graphql"
+Repository = "https://github.com/xgic/gitlab-graphql"
+Issues = "https://github.com/xgic/gitlab-graphql/issues"
+Documentation = "https://github.com/xgic/gitlab-graphql#readme"
+Changelog = "https://github.com/xgic/gitlab-graphql/releases"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.4.0",
+    "pyright>=1.1.390",
+    "types-requests>=2.31.0",
+]
+test = [
+    "pytest>=8.0.0",
+    "pytest-mock>=3.14.0",
+]
+
+# =============================================================================
+# Hatchling Build Configuration
+# =============================================================================
+# We use hatchling as the build backend because:
+# - Superior support for implicit namespace packages (PEP 420) — critical for
+#   the `xgic.*` namespace shared across multiple XGIC libraries.
+# - Cleaner, more modern defaults and configuration.
+# - Excellent performance and integration with `uv`.
+# - Better suited for new pure-Python projects in 2026.
+# See ADR-001 for the full evaluation of build backends.
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/xgic"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/",
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+
+# =============================================================================
+# Tooling Configuration (aligned with XGIC coding standards & Google Python Style)
+# =============================================================================
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # Pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+    # D for docstrings (Google style supported via pydocstyle)
+    "D",
+]
+ignore = [
+    "E501",  # line length handled explicitly where needed
+    "D203",  # conflicts with D211
+    "D213",  # conflicts with D212
+    "D100", "D101", "D102", "D103", "D104", "D105", "D107",  # docstring presence (pragmatic for early lib)
+    "D415", "D205",  # minor google docstring punctuation / spacing
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["xgic"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pyright]
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportUnknownVariableType = false
+reportUnknownMemberType = false
+reportUnknownArgumentType = false
+exclude = [
+    "**/node_modules",
+    "**/__pycache__",
+    ".git",
+    "build",
+    "dist",
+]
+
+
+# =============================================================================
+# Notes for XGIC GitLab GraphQL Client
+# =============================================================================
+# - This package follows the official XGIC Python Namespace Convention:
+#   Namespace: xgic.gitlab.graphql
+#   Distribution name on PyPI: xgic-gitlab-graphql
+# - The top-level `xgic` package is an **implicit namespace package** (PEP 420).
+#   Hatchling automatically handles this correctly when `packages = ["src/xgic"]`
+#   is declared. This allows multiple XGIC libraries to coexist cleanly under the shared `xgic` namespace.
+# - Runtime dependencies kept minimal. All GraphQL logic, models, and error handling
+#   implemented in-house for full control and future extensibility.
+# - Versioning follows Semantic Versioning. 0.x releases are considered unstable / early development.
+# - Build backend: hatchling (PEP 420, uv compatibility). Use `uv` or `pip` for install/dev.
+# - Tooling: ruff (lint + format + Google docstrings), pyright (type check), pytest.
+# - No Makefiles. Use pyproject + uv/pip/hatch scripts for all tasks.
