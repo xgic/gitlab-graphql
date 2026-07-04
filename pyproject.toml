@@ -11,7 +11,7 @@ license = { text = "MIT" }
 authors = [
     { name = "XGIC Foundation", email = "dev@xgic.net" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "requests>=2.31.0",
 ]
