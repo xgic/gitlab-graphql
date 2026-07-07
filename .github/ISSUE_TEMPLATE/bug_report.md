@@ -20,6 +20,3 @@ Steps...
 
 **Additional context**
 High-level only. No private links.
-
-**Checklist**
-- [ ] Review and approval required before any remote action or merge to main — see AGENTS.md and BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md.

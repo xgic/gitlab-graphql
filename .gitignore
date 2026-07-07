@@ -82,4 +82,10 @@ files-*.zip
 .hatch/
 uv.lock
 
+# Temporary Grok Build / local draft artifacts (MR bodies, status drafts, etc.)
+# Never commit .tmp/ or tmp/ — per XGIC status reporting standard and draft hygiene.
+# (Other repos already ignore tmp/ variants.)
+.tmp/
+tmp/
+
 # End of .gitignore for XGIC GitLab GraphQL Client (Python library + public exemplary)
