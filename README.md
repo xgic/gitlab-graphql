@@ -31,7 +31,7 @@ pip install -e ".[dev]"
 
 Or later via PyPI once published.
 
-Python >= 3.12 required. Uses uv/hatch/ruff/pyright recommended. No Makefiles.
+Python >= 3.14 required. Uses uv/hatch/ruff/pyright recommended. No Makefiles.
 
 ## Quick Start (Python)
 

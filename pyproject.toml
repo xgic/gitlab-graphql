@@ -11,7 +11,7 @@ license = { text = "MIT" }
 authors = [
     { name = "XGIC Foundation", email = "dev@xgic.net" }
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 dependencies = [
     "requests>=2.31.0",
 ]
@@ -32,8 +32,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Software Development :: Version Control :: Git",
     "Typing :: Typed",
@@ -117,7 +116,7 @@ known-first-party = ["xgic"]
 convention = "google"
 
 [tool.pyright]
-pythonVersion = "3.12"
+pythonVersion = "3.14"
 typeCheckingMode = "standard"
 reportMissingImports = true
 reportMissingTypeStubs = false

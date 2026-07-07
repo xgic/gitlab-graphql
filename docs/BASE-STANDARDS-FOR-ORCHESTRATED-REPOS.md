@@ -64,6 +64,15 @@ See AGENTS.md and the primary coordination for full details (high-level only in 
 
 All orchestrated repos follow the XGIC CLI standard. No Makefiles are created or retained. Use Python-native tooling, pyproject.toml scripts, uv, hatch, ruff, pytest, etc.
 
+## Python 3.14 standardization (new development only; see ADR 0002)
+- All *new* Python code and projects shall use Python 3.14 as the minimum (latest stable).
+- `pyproject.toml`: `requires-python = ">=3.14"`
+- Containerized environments: official `python:3.14.6-slim` (pinned) base image.
+- Update classifiers, CI, devcontainer.json, Dockerfiles, READMEs, AGENTS.md, and local standards to reflect this.
+- Existing projects: optional migration; no forced changes unless part of new work.
+- Fallback to 3.12 only after exhausting options (documented).
+- Reference: `foundation/docs/xgic-python-namespace-convention.md` for namespace and CLI modules.
+
 ## Session Status Reporting
 
 Every Grok Build session supports status reporting with exact ID "XGIC GitLab GraphQL Client".

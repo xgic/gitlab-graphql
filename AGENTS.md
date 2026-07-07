@@ -14,7 +14,7 @@ Read this file completely before starting any significant work.
   - Approval performed in GitHub web UI.
 - Commit discipline: detailed Conventional Commits. Atomic. Squash related. Include relevant tests/docs.
 - XGIC CLI standard + no Makefiles noted throughout.
-- Use ruff, pyright, pytest, hatchling/uv. Python >= 3.12.
+- Use ruff, pyright, pytest, hatchling/uv. Python >= 3.14.
 - All artifacts complete fields (labels, assignees where possible).
 
 ## Session Startup Checklist (Run First)
