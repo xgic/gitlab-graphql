@@ -42,7 +42,7 @@ Every public exemplary orchestrated repo must have (at minimum) the following:
 
 1. Hard security / private leakage rule (this document and AGENTS.md).
 2. Pure flow + branch protection: Strict GitHub Flow. main is always stable. All work on short-lived branches. Merge only after required human review(s) + checks pass.
-3. Standard labels and templates: Consistent labels. `.github/ISSUE_TEMPLATE/` and `PULL_REQUEST_TEMPLATE.md` with standard fields, checklists, and the exact gate sentence.
+3. Standard labels and templates: Consistent labels. `.github/ISSUE_TEMPLATE/` and `PULL_REQUEST_TEMPLATE.md` with standard fields and practical checklists (no restatement of rules or gate procedures from AGENTS.md or BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md).
 4. The review gate (documented in CONTRIBUTING.md + AGENTS.md).
 5. Root project instruction file: `AGENTS.md`.
 6. CONTRIBUTING.md (at `.github/CONTRIBUTING.md`).
