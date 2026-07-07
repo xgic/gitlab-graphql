@@ -21,5 +21,5 @@ Trigger with "session status report" or similar. Uses ID "XGIC GitLab GraphQL Cl
 
 ## Human Gate
 All draft artifacts must contain:
-"Review and approval required before any remote action or merge to main — see AGENTS.md and BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md."
+"Review and approval per AGENTS.md and BASE-STANDARDS (web UI)."
 Approval performed in GitHub web UI.
