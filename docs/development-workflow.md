@@ -22,7 +22,6 @@ Follow GitHub Flow.
 
 ## PRs
 - Open PR from branch.
-- Review and approval per AGENTS.md and BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md.
 - All checks must pass.
 - Approval performed in GitHub web UI.
 - Include "Closes #X", "Fixes #X", or "Resolves #X" in PR body/commits to auto-close issues on merge (GitHub built-in functionality; see PR template for reminder).
