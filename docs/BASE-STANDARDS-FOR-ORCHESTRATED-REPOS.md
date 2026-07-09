@@ -71,7 +71,7 @@ All orchestrated repos follow the XGIC CLI standard. No Makefiles are created or
 - Update classifiers, CI, devcontainer.json, Dockerfiles, READMEs, AGENTS.md, and local standards to reflect this.
 - Existing projects: optional migration; no forced changes unless part of new work.
 - Fallback to 3.12 only after exhausting options (documented).
-- Reference: `foundation/docs/xgic-python-namespace-convention.md` for namespace and CLI modules.
+- Reference: public multi-repo standards at https://github.com/xgic/ai (docs/xgic-python-namespace-convention.md and docs/adr/).
 
 ## Session Status Reporting
 

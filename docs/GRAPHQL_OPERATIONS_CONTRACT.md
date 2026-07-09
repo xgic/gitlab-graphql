@@ -227,7 +227,7 @@ This contract guarantees **resilience** for Grok Build usage (one bad task descr
 
 ---
 
-**Document Owner:** XGIC Foundation — Principal Architect & Founder, Donovan Chepien  
+**Document Owner:** XGIC  
 **Last Updated:** June 2026  
 **Next Review Trigger:** GitLab 18.3+ Work Items schema changes or addition of native time-tracking widgets
 

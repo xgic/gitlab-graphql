@@ -9,7 +9,7 @@ description = "XGIC GitLab GraphQL Client — A high-level, extensible Python cl
 readme = "README.md"
 license = { text = "MIT" }
 authors = [
-    { name = "XGIC Foundation", email = "dev@xgic.net" }
+    { name = "XGIC" }
 ]
 requires-python = ">=3.14"
 dependencies = [
