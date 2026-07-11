@@ -101,10 +101,19 @@ Core client implemented (auth, queries/mutations for work items hierarchy + pagi
 
 See CHANGELOG.md for details.
 
+## Multi-repo standards
+
+Portfolio standards, ADRs, and community health:
+
+- https://github.com/xgic/ai
+- [Community health](https://github.com/xgic/ai/blob/main/docs/community-health.md)
+- [BASE-STANDARDS](https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md)
+- [Python namespace convention](https://github.com/xgic/ai/blob/main/docs/xgic-python-namespace-convention.md)
+
 ## License
 
-TBD (likely MIT or Apache 2.0)
+Licensed under the [Apache License, Version 2.0](LICENSE).
 
 ## Contributing
 
-Follow the coding standards defined in the project (clean architecture, strong typing, Google-influenced Python style where applicable, comprehensive error handling). All changes should be made via feature branches with clear PR descriptions.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Use GitHub Flow: issue-named branches, Conventional Commits, human review in the GitHub UI before merge to `main`.
