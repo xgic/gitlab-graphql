@@ -112,7 +112,9 @@ Portfolio standards, ADRs, and community health:
 
 ## License
 
-Licensed under the [Apache License, Version 2.0](LICENSE).
+Copyright 2026 XGIC.  
+Licensed under the [Apache License, Version 2.0](LICENSE).  
+See [NOTICE](NOTICE).
 
 ## Contributing
 
