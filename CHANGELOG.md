@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Domain models: BaseWorkItem, Issue, Task, MergeRequest with from_graphql factories.
 - Full package layout (xgic.gitlab.graphql namespace), __init__ exports.
 - pyproject.toml updated: Python >=3.12, ruff (Google), pyright, hatchling, pytest.
-- Base standards: AGENTS.md, docs/, .github templates, .gitignore, CONTRIBUTING.md, DEV-JOURNAL, GROK-TASKS, LICENSE.
+- Base standards: AGENTS.md, docs/, .github templates, .gitignore, CONTRIBUTING.md, LICENSE.
 - Pagination follows GitLab Relay-style (pageInfo, first/after).
 - Example usage script.
 
@@ -125,3 +125,4 @@ uv publish
 - For the initial private phase, publishing may be limited to an internal PyPI mirror or direct `pip install -e .` usage until the repository goes public.
 
 This process ensures traceability, reproducibility, and alignment with XGIC’s engineering standards across all internal and client projects.
+
