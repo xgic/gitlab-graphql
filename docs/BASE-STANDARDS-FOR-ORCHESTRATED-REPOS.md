@@ -52,7 +52,7 @@ Every public exemplary orchestrated repo must have (at minimum) the following:
    - architecture.md (or ARCHITECTURE.md)
    - grok-playbooks.md
    - BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md (this file)
-9. Lightweight AI memory: DEV-JOURNAL.md , GROK-TASKS.md
+9. Lightweight AI memory: platform issues/tasks and the primary plan (temporary `.xgic/` status reports only)
 10. .gitignore: Comprehensive, includes `.xgic/` (never commit).
 11. Commit discipline: Detailed Conventional Commits. Atomic. Squash related small changes. Positive framing.
 12. xde as the standard for container / environment orchestration tasks (no Makefiles).
@@ -80,3 +80,4 @@ Every Grok Build session supports status reporting with exact ID "XGIC GitLab Gr
 Reports are generated on trigger and saved to `.xgic/grok-build/status-report.md` (never committed).
 
 ## End of BASE-STANDARDS
+
