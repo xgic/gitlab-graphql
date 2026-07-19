@@ -7,24 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.1rc1] - 2026-07-19
+## [0.1.1] - 2026-07-19
 
 ### Added
 - GitHub Actions CI (pytest, ruff, uv package smoke) and OIDC release workflow for TestPyPI/PyPI.
 - Release Environments `testpypi` / `pypi`.
-
-### Changed
-- Python baseline `requires-python = ">=3.14"`; ruff target-version `py314`.
-- README install/release notes prefer **uv** and point at the public package-release process.
-
-## [0.1.1] - 2026-06-30
-
-### Fixed
-- Code recovery after history cleanup (full implementation restored).
-- Documentation synchronization (updated examples/claims/return shapes to match code; moved design docs + ARCHITECTURE.md to docs/).
-- Removed unused pydantic dependency.
-
-### Added
+- First public index publish path (TestPyPI RC `0.1.1rc1`, then PyPI `0.1.1`).
 - Core GitLabClient with token auth, GraphQL execution, error hierarchy.
 - Work Item creation: create_issue, create_task, create_issue_with_tasks (proper hierarchy via widgets).
 - Cursor-based pagination support (list_work_items, iter_work_items, _execute_paginated helper).
