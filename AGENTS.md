@@ -25,17 +25,21 @@ Read this file completely before starting any significant work.
 - Private tracker paths, work-item links, or private project issue/MR URLs
 - Private tracker IDs, private hub names, or private repository identities
 - Private local filesystem paths as required documentation
+- Hard-coded private project paths, usernames, or real user/work-item GIDs in source or tests
 - Restating portfolio hard-security rules inside PR/issue bodies (rules live in this file and multi-repo standards)
 
 **Allowed on project artifacts:** technical change summary only; full `https://github.com/xgic/...` URLs; same-repo `#N`. When work is coordinated privately, omit that fact from public artifacts entirely.
 
-**Pre-publish checklist** (every public PR/issue body, comment, and commit message):
+**Configuration over hard-coding:** `GitLabConfig` / env (`GITLAB_URL`, `GITLAB_TOKEN`, `GITLAB_TEST_NAMESPACE_PATH`, …). Unit tests use synthetic fixtures only. Integration tests (opt-in) use a dedicated non-production GitLab—never production coordination projects.
+
+**Pre-publish checklist** (every public PR/issue body, comment, commit, and test change):
 
 1. No private hosts / internal URLs  
 2. No private tracker IDs, private hub/repo names, or private work-item links  
 3. No private local paths  
-4. No rule restatement in project artifacts  
-5. Labels applied  
+4. No hard-coded private paths/user IDs in tests or examples  
+5. No rule restatement in project artifacts  
+6. Labels applied  
 
 Violations are security incidents: sanitize immediately. Multi-repo policy: https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md
 

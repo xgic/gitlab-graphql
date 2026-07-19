@@ -78,12 +78,6 @@ mutation WorkItemCreate($input: WorkItemCreateInput!) {
         username
         name
       }
-      assignees {
-        nodes {
-          username
-          name
-        }
-      }
       taskCompletionStatus {
         completedCount
         count
@@ -93,10 +87,18 @@ mutation WorkItemCreate($input: WorkItemCreateInput!) {
           title
         }
       }
-      # Request widgets so that hierarchy information (parent) is available
-      # for Task.from_graphql() to parse the parent_id correctly.
+      # Assignees and hierarchy live on widgets (not top-level WorkItem fields
+      # on all GitLab EE versions).
       widgets {
         __typename
+        ... on WorkItemWidgetAssignees {
+          assignees {
+            nodes {
+              username
+              name
+            }
+          }
+        }
         ... on WorkItemWidgetHierarchy {
           parent {
             id
@@ -119,6 +121,7 @@ def build_work_item_create_input(
     work_item_type_id: str | None = None,
     hierarchy_parent_id: str | None = None,
     label_names: list[str] | None = None,
+    assignee_ids: list[str] | None = None,
     milestone_id: str | None = None,
 ) -> dict[str, Any]:
     """Construct the `input` payload for the workItemCreate mutation.
@@ -139,18 +142,21 @@ def build_work_item_create_input(
         hierarchy_parent_id: Global ID of the parent Work Item (only for child Tasks).
                              Example: "gid://gitlab/WorkItem/123456"
         label_names: Optional list of label titles to apply
+        assignee_ids: Optional list of user global IDs (e.g. ``gid://gitlab/User/<id>``)
         milestone_id: Optional global ID of a milestone
 
     Returns:
         Dictionary suitable for the `variables` argument of GraphQL execution:
         {"input": { ... all fields ... }}
 
-    Example for a child Task:
+    Example for a child Task (synthetic IDs only — inject real values from config):
         build_work_item_create_input(
-            namespace_path="group/project",
+            namespace_path=namespace_path,  # from config / env
             title="Implement login button",
             work_item_type_id=task_type_id,
-            hierarchy_parent_id=parent_issue_global_id
+            hierarchy_parent_id=parent_issue_global_id,
+            label_names=["type:docs", "priority:high"],
+            assignee_ids=[assignee_user_gid],  # from config / env
         )
     """
     input_payload: dict[str, Any] = {
@@ -169,6 +175,10 @@ def build_work_item_create_input(
 
     if label_names:
         input_payload["labelNames"] = label_names
+
+    if assignee_ids:
+        # Work items use assigneesWidget (not a top-level assigneeIds field).
+        input_payload["assigneesWidget"] = {"assigneeIds": list(assignee_ids)}
 
     if milestone_id:
         input_payload["milestoneId"] = milestone_id
@@ -244,12 +254,6 @@ query GetWorkItems($fullPath: ID!, $first: Int = 20, $after: String) {
           username
           name
         }
-        assignees {
-          nodes {
-            username
-            name
-          }
-        }
         labels {
           nodes {
             title
@@ -257,6 +261,14 @@ query GetWorkItems($fullPath: ID!, $first: Int = 20, $after: String) {
         }
         widgets {
           __typename
+          ... on WorkItemWidgetAssignees {
+            assignees {
+              nodes {
+                username
+                name
+              }
+            }
+          }
           ... on WorkItemWidgetHierarchy {
             parent {
               id

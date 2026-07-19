@@ -60,7 +60,7 @@ def sample_issue_data() -> dict[str, Any]:
         "state": "opened",
         "createdAt": "2026-06-27T10:00:00Z",
         "updatedAt": "2026-06-27T10:05:00Z",
-        "author": {"username": "donovan"},
+        "author": {"username": "test-user"},
         "labels": {"nodes": [{"title": "feature"}]},
         "taskCompletionStatus": {"completedCount": 0, "count": 3},
     }
@@ -112,6 +112,48 @@ def test_issue_from_graphql(sample_issue_data: dict[str, Any]):
     assert isinstance(issue, Issue)
     assert issue.iid == 42
     assert "checkout" in issue.title
+
+
+def test_build_work_item_create_input_includes_assignees_and_labels() -> None:
+    from xgic.gitlab.graphql.graphql.operations import build_work_item_create_input
+
+    # Synthetic fixture values only — never real private host/project/user IDs.
+    ns = "example-group/example-project"
+    user_gid = "gid://gitlab/User/9001"
+    parent_gid = "gid://gitlab/WorkItem/2002"
+    type_gid = "gid://gitlab/WorkItems::Type/5"
+
+    payload = build_work_item_create_input(
+        namespace_path=ns,
+        title="Child task",
+        work_item_type_id=type_gid,
+        hierarchy_parent_id=parent_gid,
+        label_names=["type:docs", "priority:high"],
+        assignee_ids=[user_gid],
+    )["input"]
+    assert payload["namespacePath"] == ns
+    assert payload["labelNames"] == ["type:docs", "priority:high"]
+    assert payload["assigneesWidget"] == {"assigneeIds": [user_gid]}
+    assert payload["hierarchyWidget"] == {"parentId": parent_gid}
+
+
+def test_assignees_from_widget() -> None:
+    data = {
+        "id": "gid://gitlab/WorkItem/99",
+        "iid": 99,
+        "title": "Assigned item",
+        "widgets": [
+            {
+                "__typename": "WorkItemWidgetAssignees",
+                "assignees": {
+                    "nodes": [{"username": "xgic", "name": "XGIC"}],
+                },
+            }
+        ],
+    }
+    item = Issue.from_graphql(data)
+    assert len(item.assignees) == 1
+    assert item.assignees[0]["username"] == "xgic"
 
 
 def test_task_from_graphql_extracts_parent(sample_task_data: dict[str, Any]):
@@ -196,9 +238,9 @@ def test_list_work_items_returns_page(
 
 
 def test_get_current_user(mock_client: GitLabClient):
-    mock_client._execute.return_value = {"currentUser": {"username": "donovan"}}
+    mock_client._execute.return_value = {"currentUser": {"username": "test-user"}}
     user = mock_client.get_current_user()
-    assert user["username"] == "donovan"
+    assert user["username"] == "test-user"
 
 
 def test_create_issue_with_tasks_partial_failure(
@@ -253,6 +295,32 @@ def test_create_issue_with_tasks_fail_fast(
 
 
 # -------------------------------------------------------------------------
+# Integration tests (opt-in via environment — never hard-code hosts/paths)
+# -------------------------------------------------------------------------
+# Required when GITLAB_INTEGRATION=1:
+#   GITLAB_URL, GITLAB_TOKEN, GITLAB_TEST_NAMESPACE_PATH
+# Optional:
+#   GITLAB_TEST_ASSIGNEE_ID (user global ID for assignee exercises)
+#
+# Use a dedicated non-production GitLab EE + test project only.
+# Never hard-code private hosts, production project paths, or real user IDs.
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(
+    __import__("os").environ.get("GITLAB_INTEGRATION") != "1",
+    reason="Set GITLAB_INTEGRATION=1 and config env vars for live GitLab tests",
+)
+def test_integration_config_env_present() -> None:
+    """Guard: integration mode must be fully configured, not hard-coded."""
+    import os
+
+    required = ("GITLAB_URL", "GITLAB_TOKEN", "GITLAB_TEST_NAMESPACE_PATH")
+    missing = [k for k in required if not os.environ.get(k)]
+    assert not missing, f"Missing integration env: {missing}"
+
+
+# -------------------------------------------------------------------------
 # Notes for Future Test Expansion
 # -------------------------------------------------------------------------
 """
@@ -261,12 +329,8 @@ Recommended future additions:
 1. Use `pytest-responses` or `responses` library for more realistic
    HTTP-level mocking of `_execute`.
 
-2. Add property-based tests (Hypothesis) for input validation.
+2. Full integration suite against a dedicated non-production GitLab EE
+   (config via env only; see test_integration_config_env_present).
 
-3. Add tests for label and milestone handling once fully implemented.
-
-4. Integration test module (tests/test_integration.py) that is skipped
-   unless GITLAB_TOKEN and GITLAB_URL are set in the environment.
-
-5. Test coverage target: >= 85% on client.py and operations.py for Phase 1.
+3. Test coverage target: >= 85% on client.py and operations.py for Phase 1.
 """

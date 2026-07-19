@@ -47,16 +47,28 @@ class BaseWorkItem:
             created_at=cls._parse_datetime(data.get("createdAt")),
             updated_at=cls._parse_datetime(data.get("updatedAt")),
             author=data.get("author"),
-            assignees=(
-                data.get("assignees", {}).get("nodes", [])
-                if data.get("assignees")
-                else []
-            ),
+            assignees=cls._parse_assignees(data),
             labels=[
                 node.get("title") for node in data.get("labels", {}).get("nodes", [])
             ],
             milestone=data.get("milestone"),
         )
+
+    @staticmethod
+    def _parse_assignees(data: dict[str, Any]) -> list[dict[str, Any]]:
+        """Assignees may be top-level (legacy) or on WorkItemWidgetAssignees."""
+        if data.get("assignees"):
+            return data.get("assignees", {}).get("nodes", []) or []
+        for widget in data.get("widgets") or []:
+            if not isinstance(widget, dict):
+                continue
+            if widget.get("__typename") == "WorkItemWidgetAssignees" or (
+                "assignees" in widget and widget.get("assignees") is not None
+            ):
+                assignees = widget.get("assignees") or {}
+                if isinstance(assignees, dict):
+                    return assignees.get("nodes", []) or []
+        return []
 
     @staticmethod
     def _parse_datetime(dt_str: str | None) -> datetime | None:
