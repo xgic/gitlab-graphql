@@ -7,7 +7,7 @@ Read this file completely before starting any significant work.
 ## How We Work Together (Collaboration Principles)
 
 - Positive, constructive, forward-looking language only.
-- Hard security rule (zero exposure of private details) is absolute. Public repo must stay silent.
+- **Hard security (absolute):** zero private leakage on every public surface—files, issues, **PR/issue/Discussion bodies and comments**, commits, package metadata, and agent output destined for public artifacts.
 - Git management + mandatory review gate: every change must receive explicit review and approval before push or merge to main.
   - Grok produces drafts only.
   - "Review and approval required before any remote action or merge to main — see AGENTS.md and BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md."
@@ -16,6 +16,26 @@ Read this file completely before starting any significant work.
 - XGIC CLI standard + no Makefiles noted throughout.
 - Use ruff, pyright, pytest, hatchling/uv. Python >= 3.14.
 - All artifacts complete fields (labels, assignees where possible).
+
+## Hard security (public surfaces)
+
+**Forbidden** on this public repository:
+
+- Private hosts or internal URLs
+- Private tracker paths, work-item links, or private project issue/MR URLs
+- Private tracker IDs or shorthand that only resolve on private systems
+- Private local filesystem paths as required documentation
+
+**Allowed:** full `https://github.com/xgic/...` URLs; same-repo `#N`. When private coordination exists, use only: “Private portfolio coordination is tracked only in the private XGIC Foundation (org members only).”
+
+**Pre-publish checklist** (every public PR/issue body, comment, and commit message):
+
+1. No private hosts / internal URLs  
+2. No private tracker IDs or private work-item links  
+3. No private local paths  
+4. Labels applied  
+
+Violations are security incidents: sanitize immediately; do not re-leak while explaining the fix on public GitHub. Multi-repo policy: https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md
 
 ## Session Startup Checklist (Run First)
 
@@ -26,6 +46,7 @@ Read this file completely before starting any significant work.
 5. Confirm status reporting support (exact ID "XGIC GitLab GraphQL Client").
 6. Review GitLab GraphQL API docs (EE) and best practices.
 7. Ensure all artifacts complete required fields and use proper tracking.
+8. Confirm drafts are **public-safe** (hard security scan above).
 
 ## Status Reporting Support
 
