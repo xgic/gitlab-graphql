@@ -217,11 +217,20 @@ class GitLabClient:
         *,
         namespace_path: str,
         labels: list[str] | None = None,
+        assignee_ids: list[str] | None = None,
         milestone_id: str | None = None,
     ) -> Issue:
         """Create a new Issue (or other top-level work item type).
 
         This is a thin wrapper around the workItemCreate mutation.
+
+        Args:
+            title: Issue title.
+            description: Markdown description.
+            namespace_path: Full GitLab project path (e.g. ``group/project``).
+            labels: Optional label titles to apply at create time.
+            assignee_ids: Optional user global IDs (``gid://gitlab/User/N``).
+            milestone_id: Optional milestone global ID.
         """
         if not title or not title.strip():
             raise ValueError("Issue title cannot be empty")
@@ -236,6 +245,7 @@ class GitLabClient:
             description=description,
             work_item_type_id=issue_type_id,
             label_names=labels,
+            assignee_ids=assignee_ids,
             milestone_id=milestone_id,
         )
 
@@ -265,6 +275,9 @@ class GitLabClient:
 
         The parent-child relationship is established via the `hierarchyWidget`
         in the mutation input (handled by `build_work_item_create_input`).
+
+        Callers (including Grok Build) should pass **labels** and **assignee_ids**
+        for every Task unless the human explicitly requests unassigned work.
         """
         if not parent_id:
             raise ValueError("parent_id is required")
@@ -282,6 +295,7 @@ class GitLabClient:
             work_item_type_id=task_type_id,
             hierarchy_parent_id=parent_id,
             label_names=labels,
+            assignee_ids=assignee_ids,
         )
 
         data = self._execute(WORK_ITEM_CREATE_MUTATION, variables)
@@ -304,10 +318,11 @@ class GitLabClient:
         self,
         issue_title: str,
         issue_description: str,
-        tasks: list[dict[str, str]],
+        tasks: list[dict[str, Any]],
         *,
         namespace_path: str,
         labels: list[str] | None = None,
+        assignee_ids: list[str] | None = None,
         fail_fast: bool = False,
     ) -> dict[str, Any]:
         """Create a parent Issue and multiple child Tasks in one coordinated operation.
@@ -320,9 +335,12 @@ class GitLabClient:
             issue_title: Title of the parent Issue.
             issue_description: Description of the parent Issue.
             tasks: List of task dictionaries, each containing at minimum:
-                   {"title": "...", "description": "..."}
+                   {"title": "...", "description": "..."}.
+                   Optional per-task ``labels`` and ``assignee_ids`` override
+                   the parent defaults for that child.
             namespace_path: Full GitLab path (e.g. "group/project").
-            labels: Optional labels to apply to the parent Issue.
+            labels: Labels for the parent Issue and default for child Tasks.
+            assignee_ids: User GIDs for the parent and default for child Tasks.
             fail_fast: If True, stop immediately on the first task creation failure.
                        If False (default), continue and report partial failures.
 
@@ -351,15 +369,18 @@ class GitLabClient:
             description=issue_description,
             namespace_path=namespace_path,
             labels=labels,
+            assignee_ids=assignee_ids,
         )
 
         created_tasks: list[Task] = []
         failed_tasks: list[dict[str, Any]] = []
 
-        # 2. Create child tasks
+        # 2. Create child tasks (inherit parent labels/assignees unless overridden)
         for idx, task_spec in enumerate(tasks):
-            task_title = task_spec.get("title", "").strip()
-            task_description = task_spec.get("description", "")
+            task_title = str(task_spec.get("title", "")).strip()
+            task_description = str(task_spec.get("description", "") or "")
+            task_labels = task_spec.get("labels", labels)
+            task_assignees = task_spec.get("assignee_ids", assignee_ids)
 
             if not task_title:
                 failed_tasks.append(
@@ -383,6 +404,8 @@ class GitLabClient:
                     title=task_title,
                     description=task_description,
                     namespace_path=namespace_path,
+                    labels=task_labels,
+                    assignee_ids=task_assignees,
                 )
                 created_tasks.append(task)
             except Exception as exc:  # Broad catch to support partial success

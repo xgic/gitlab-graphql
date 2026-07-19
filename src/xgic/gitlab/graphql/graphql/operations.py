@@ -121,6 +121,7 @@ def build_work_item_create_input(
     work_item_type_id: str | None = None,
     hierarchy_parent_id: str | None = None,
     label_names: list[str] | None = None,
+    assignee_ids: list[str] | None = None,
     milestone_id: str | None = None,
 ) -> dict[str, Any]:
     """Construct the `input` payload for the workItemCreate mutation.
@@ -141,6 +142,7 @@ def build_work_item_create_input(
         hierarchy_parent_id: Global ID of the parent Work Item (only for child Tasks).
                              Example: "gid://gitlab/WorkItem/123456"
         label_names: Optional list of label titles to apply
+        assignee_ids: Optional list of user global IDs (e.g. ``gid://gitlab/User/10``)
         milestone_id: Optional global ID of a milestone
 
     Returns:
@@ -152,7 +154,9 @@ def build_work_item_create_input(
             namespace_path="group/project",
             title="Implement login button",
             work_item_type_id=task_type_id,
-            hierarchy_parent_id=parent_issue_global_id
+            hierarchy_parent_id=parent_issue_global_id,
+            label_names=["type:docs", "priority:high"],
+            assignee_ids=["gid://gitlab/User/10"],
         )
     """
     input_payload: dict[str, Any] = {
@@ -171,6 +175,10 @@ def build_work_item_create_input(
 
     if label_names:
         input_payload["labelNames"] = label_names
+
+    if assignee_ids:
+        # Work items use assigneesWidget (not a top-level assigneeIds field).
+        input_payload["assigneesWidget"] = {"assigneeIds": list(assignee_ids)}
 
     if milestone_id:
         input_payload["milestoneId"] = milestone_id

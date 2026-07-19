@@ -114,6 +114,24 @@ def test_issue_from_graphql(sample_issue_data: dict[str, Any]):
     assert "checkout" in issue.title
 
 
+def test_build_work_item_create_input_includes_assignees_and_labels() -> None:
+    from xgic.gitlab.graphql.graphql.operations import build_work_item_create_input
+
+    payload = build_work_item_create_input(
+        namespace_path="xgic/foundation",
+        title="Child task",
+        work_item_type_id="gid://gitlab/WorkItems::Type/5",
+        hierarchy_parent_id="gid://gitlab/WorkItem/1",
+        label_names=["type:docs", "priority:high"],
+        assignee_ids=["gid://gitlab/User/10"],
+    )["input"]
+    assert payload["labelNames"] == ["type:docs", "priority:high"]
+    assert payload["assigneesWidget"] == {
+        "assigneeIds": ["gid://gitlab/User/10"]
+    }
+    assert payload["hierarchyWidget"] == {"parentId": "gid://gitlab/WorkItem/1"}
+
+
 def test_assignees_from_widget() -> None:
     data = {
         "id": "gid://gitlab/WorkItem/99",
