@@ -27,6 +27,10 @@
 - Cross-platform (Windows + Linux)
 - Easy to install and reuse across projects
 
+## Testing
+
+See [TESTING.md](TESTING.md) for unit vs opt-in integration tests and the env contract (GITLAB_URL, GITLAB_TOKEN).
+
 ## Installation
 
 ```bash
