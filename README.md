@@ -21,17 +21,24 @@ The official XGIC GitLab GraphQL Client — a clean, extensible, Python-first cl
 - Cross-platform (Windows + Linux)
 - Easy to install and reuse across projects
 
-## Installation (Development)
+## Installation
+
+**From PyPI** (after publish; preferred for consumers):
+
+```bash
+uv venv
+uv pip install xgic-gitlab-graphql
+```
+
+**Development** (editable):
 
 ```bash
 git clone https://github.com/xgic/gitlab-graphql.git
 cd gitlab-graphql
-pip install -e ".[dev]"
+uv pip install -e ".[dev]"
 ```
 
-Or later via PyPI once published.
-
-Python >= 3.14 required. Uses uv/hatch/ruff/pyright recommended. No Makefiles.
+Python **3.14+** required. Build/smoke with **uv**. Official releases use OIDC Trusted Publishing ([python-package-release.md](https://github.com/xgic/ai/blob/main/docs/python-package-release.md)). No Makefiles.
 
 ## Quick Start (Python)
 
