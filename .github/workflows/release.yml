@@ -77,10 +77,17 @@ jobs:
           uv venv .venv-smoke
           source .venv-smoke/bin/activate
           uv pip install --upgrade pip
-          uv pip install \
-            --index-url https://test.pypi.org/simple/ \
-            --extra-index-url https://pypi.org/simple/ \
-            "xgic-gitlab-graphql==${VER}"
+          # TestPyPI first; PyPI for deps. unsafe-best-match + prerelease so RC
+          # versions resolve when the package already exists on production PyPI.
+          for i in 1 2 3 4 5 6; do
+            uv pip install \
+              --index-url https://test.pypi.org/simple/ \
+              --extra-index-url https://pypi.org/simple/ \
+              --index-strategy unsafe-best-match \
+              --prerelease allow \
+              "xgic-gitlab-graphql==${VER}" && break
+            sleep 15
+          done
           python -c "from xgic.gitlab.graphql import GitLabClient, GitLabConfig; print(GitLabClient, GitLabConfig)"
 
   publish-pypi:
