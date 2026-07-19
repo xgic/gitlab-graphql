@@ -41,6 +41,8 @@ Read this file completely before starting any significant work.
 5. No rule restatement in project artifacts  
 6. Labels applied  
 
+**Before close:** verify every Markdown checklist item on the issue/PR, mark completed items `- [x]`, and do not close with unchecked required items unless a human documents a waiver. Reviewers (human or future AI) apply the same gate.
+
 Violations are security incidents: sanitize immediately. Multi-repo policy: https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md
 
 ## Session Startup Checklist (Run First)

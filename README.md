@@ -1,17 +1,23 @@
-# XGIC GitLab GraphQL Client (`xgic-gitlab-graphql`)
+# XGIC GitLab GraphQL Client
 
-The official XGIC GitLab GraphQL Client — a clean, extensible, Python-first client for GitLab’s GraphQL API (Python namespace: `xgic.gitlab.graphql`).
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![CI](https://github.com/xgic/gitlab-graphql/actions/workflows/ci.yml/badge.svg)](https://github.com/xgic/gitlab-graphql/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/xgic-gitlab-graphql.svg)](https://pypi.org/project/xgic-gitlab-graphql/)
+[![Python](https://img.shields.io/pypi/pyversions/xgic-gitlab-graphql.svg)](https://pypi.org/project/xgic-gitlab-graphql/)
+[![Release](https://img.shields.io/github/v/release/xgic/gitlab-graphql)](https://github.com/xgic/gitlab-graphql/releases)
+
+**XGIC GitLab GraphQL Client** (`xgic-gitlab-graphql`) — a clean, extensible, Python-first client for GitLab’s GraphQL API (namespace: `xgic.gitlab.graphql`).
 
 **Goal:** Replace fragile CLI-based automation (`glab`) with a reliable, strongly-typed Python library that Grok Build (and humans) can use comfortably. Start with Issues + child Tasks (proper Work Item hierarchy), Merge Requests, Labels, Milestones, and Releases. Designed from day one to grow into full GraphQL coverage and structured data (estimates, actuals, etc.).
 
-## Why This Exists
+## Why this exists
 
-- GitLab CLI escaping problems with long descriptions and complex content
+- Official GitLab CLI escaping problems with long descriptions and complex content
 - Need for real hierarchical Tasks instead of Markdown checklists
 - Desire to move work data into structured, queryable fields
 - Grok Build works best when it can simply `import` a well-designed Python library
 
-## Key Features (Phase 1)
+## Key features (phase 1)
 
 - High-level methods: `create_issue()`, `create_task(parent_id)`, `create_issue_with_tasks()` (create_merge_request() is a placeholder stub)
 - Proper parent-child Task hierarchy via GitLab Work Items
@@ -23,14 +29,11 @@ The official XGIC GitLab GraphQL Client — a clean, extensible, Python-first cl
 
 ## Installation
 
-**From PyPI** (after publish; preferred for consumers):
-
 ```bash
-uv venv
 uv pip install xgic-gitlab-graphql
 ```
 
-**Development** (editable):
+### Development (editable)
 
 ```bash
 git clone https://github.com/xgic/gitlab-graphql.git
@@ -40,7 +43,7 @@ uv pip install -e ".[dev]"
 
 Python **3.14+** required. Build/smoke with **uv**. Official releases use OIDC Trusted Publishing ([python-package-release.md](https://github.com/xgic/ai/blob/main/docs/python-package-release.md)). No Makefiles.
 
-## Quick Start (Python)
+## Quick start (Python)
 
 ```python
 from xgic.gitlab.graphql import GitLabClient
