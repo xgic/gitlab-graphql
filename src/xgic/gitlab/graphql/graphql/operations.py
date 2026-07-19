@@ -78,12 +78,6 @@ mutation WorkItemCreate($input: WorkItemCreateInput!) {
         username
         name
       }
-      assignees {
-        nodes {
-          username
-          name
-        }
-      }
       taskCompletionStatus {
         completedCount
         count
@@ -93,10 +87,18 @@ mutation WorkItemCreate($input: WorkItemCreateInput!) {
           title
         }
       }
-      # Request widgets so that hierarchy information (parent) is available
-      # for Task.from_graphql() to parse the parent_id correctly.
+      # Assignees and hierarchy live on widgets (not top-level WorkItem fields
+      # on all GitLab EE versions).
       widgets {
         __typename
+        ... on WorkItemWidgetAssignees {
+          assignees {
+            nodes {
+              username
+              name
+            }
+          }
+        }
         ... on WorkItemWidgetHierarchy {
           parent {
             id
@@ -244,12 +246,6 @@ query GetWorkItems($fullPath: ID!, $first: Int = 20, $after: String) {
           username
           name
         }
-        assignees {
-          nodes {
-            username
-            name
-          }
-        }
         labels {
           nodes {
             title
@@ -257,6 +253,14 @@ query GetWorkItems($fullPath: ID!, $first: Int = 20, $after: String) {
         }
         widgets {
           __typename
+          ... on WorkItemWidgetAssignees {
+            assignees {
+              nodes {
+                username
+                name
+              }
+            }
+          }
           ... on WorkItemWidgetHierarchy {
             parent {
               id

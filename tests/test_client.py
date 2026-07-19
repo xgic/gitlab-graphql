@@ -114,6 +114,25 @@ def test_issue_from_graphql(sample_issue_data: dict[str, Any]):
     assert "checkout" in issue.title
 
 
+def test_assignees_from_widget() -> None:
+    data = {
+        "id": "gid://gitlab/WorkItem/99",
+        "iid": 99,
+        "title": "Assigned item",
+        "widgets": [
+            {
+                "__typename": "WorkItemWidgetAssignees",
+                "assignees": {
+                    "nodes": [{"username": "xgic", "name": "XGIC"}],
+                },
+            }
+        ],
+    }
+    item = Issue.from_graphql(data)
+    assert len(item.assignees) == 1
+    assert item.assignees[0]["username"] == "xgic"
+
+
 def test_task_from_graphql_extracts_parent(sample_task_data: dict[str, Any]):
     task = Task.from_graphql(sample_task_data)
     assert isinstance(task, Task)
