@@ -130,3 +130,35 @@ jobs:
             sleep 15
           done
           python -c "from xgic.gitlab.graphql import GitLabClient, GitLabConfig; print(GitLabClient, GitLabConfig)"
+
+  github-release-rc:
+    name: GitHub Release (RC)
+    if: contains(github.ref_name, 'rc')
+    needs: [smoke-testpypi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          prerelease: true
+          generate_release_notes: true
+
+  github-release-final:
+    name: GitHub Release (final)
+    if: ${{ !contains(github.ref_name, 'rc') }}
+    needs: [smoke-pypi]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          prerelease: false
+          generate_release_notes: true
