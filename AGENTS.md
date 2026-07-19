@@ -23,19 +23,21 @@ Read this file completely before starting any significant work.
 
 - Private hosts or internal URLs
 - Private tracker paths, work-item links, or private project issue/MR URLs
-- Private tracker IDs or shorthand that only resolve on private systems
+- Private tracker IDs, private hub names, or private repository identities
 - Private local filesystem paths as required documentation
+- Restating portfolio hard-security rules inside PR/issue bodies (rules live in this file and multi-repo standards)
 
-**Allowed:** full `https://github.com/xgic/...` URLs; same-repo `#N`. When private coordination exists, use only: “Private portfolio coordination is tracked only in the private XGIC Foundation (org members only).”
+**Allowed on project artifacts:** technical change summary only; full `https://github.com/xgic/...` URLs; same-repo `#N`. When work is coordinated privately, omit that fact from public artifacts entirely.
 
 **Pre-publish checklist** (every public PR/issue body, comment, and commit message):
 
 1. No private hosts / internal URLs  
-2. No private tracker IDs or private work-item links  
+2. No private tracker IDs, private hub/repo names, or private work-item links  
 3. No private local paths  
-4. Labels applied  
+4. No rule restatement in project artifacts  
+5. Labels applied  
 
-Violations are security incidents: sanitize immediately; do not re-leak while explaining the fix on public GitHub. Multi-repo policy: https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md
+Violations are security incidents: sanitize immediately. Multi-repo policy: https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md
 
 ## Session Startup Checklist (Run First)
 
