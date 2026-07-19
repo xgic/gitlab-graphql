@@ -142,21 +142,21 @@ def build_work_item_create_input(
         hierarchy_parent_id: Global ID of the parent Work Item (only for child Tasks).
                              Example: "gid://gitlab/WorkItem/123456"
         label_names: Optional list of label titles to apply
-        assignee_ids: Optional list of user global IDs (e.g. ``gid://gitlab/User/10``)
+        assignee_ids: Optional list of user global IDs (e.g. ``gid://gitlab/User/<id>``)
         milestone_id: Optional global ID of a milestone
 
     Returns:
         Dictionary suitable for the `variables` argument of GraphQL execution:
         {"input": { ... all fields ... }}
 
-    Example for a child Task:
+    Example for a child Task (synthetic IDs only — inject real values from config):
         build_work_item_create_input(
-            namespace_path="group/project",
+            namespace_path=namespace_path,  # from config / env
             title="Implement login button",
             work_item_type_id=task_type_id,
             hierarchy_parent_id=parent_issue_global_id,
             label_names=["type:docs", "priority:high"],
-            assignee_ids=["gid://gitlab/User/10"],
+            assignee_ids=[assignee_user_gid],  # from config / env
         )
     """
     input_payload: dict[str, Any] = {

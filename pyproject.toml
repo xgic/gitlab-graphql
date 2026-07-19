@@ -115,6 +115,11 @@ known-first-party = ["xgic"]
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.pytest.ini_options]
+markers = [
+    "integration: live GitLab tests (require GITLAB_INTEGRATION=1 and config env vars)",
+]
+
 [tool.pyright]
 pythonVersion = "3.14"
 typeCheckingMode = "standard"
