@@ -62,6 +62,10 @@ def build_work_item_types_variables(full_path: str) -> dict[str, Any]:
 # The hierarchyWidget field is the key mechanism for establishing parent-child
 # relationships in GitLab's unified Work Items model.
 
+# Minimum selection set for create responses: fields that exist across GitLab.com
+# and varied self-hosted schemas. Optional fields (e.g. taskCompletionStatus) are
+# NOT requested on create — some instances reject them on WorkItem (see #41).
+# Models treat missing optional fields as None.
 WORK_ITEM_CREATE_MUTATION: str = """
 mutation WorkItemCreate($input: WorkItemCreateInput!) {
   workItemCreate(input: $input) {
@@ -78,17 +82,8 @@ mutation WorkItemCreate($input: WorkItemCreateInput!) {
         username
         name
       }
-      taskCompletionStatus {
-        completedCount
-        count
-      }
-      labels {
-        nodes {
-          title
-        }
-      }
-      # Assignees and hierarchy live on widgets (not top-level WorkItem fields
-      # on all GitLab EE versions).
+      # Assignees, labels, and hierarchy live on widgets on many GitLab versions
+      # (not top-level WorkItem fields). Keep create selection conservative.
       widgets {
         __typename
         ... on WorkItemWidgetAssignees {
@@ -96,6 +91,13 @@ mutation WorkItemCreate($input: WorkItemCreateInput!) {
             nodes {
               username
               name
+            }
+          }
+        }
+        ... on WorkItemWidgetLabels {
+          labels {
+            nodes {
+              title
             }
           }
         }
@@ -121,6 +123,7 @@ def build_work_item_create_input(
     work_item_type_id: str | None = None,
     hierarchy_parent_id: str | None = None,
     label_names: list[str] | None = None,
+    label_ids: list[str] | None = None,
     assignee_ids: list[str] | None = None,
     milestone_id: str | None = None,
 ) -> dict[str, Any]:
@@ -134,30 +137,21 @@ def build_work_item_create_input(
     (as of GitLab 2025/2026) to establish parent-child relationships at creation time.
 
     Args:
-        namespace_path: Full path of the project or group (e.g. "xgic/internal-tools")
+        namespace_path: Full path of the project or group (e.g. from config / env).
         title: Title of the new work item
         description: Markdown description
         work_item_type_id: Global ID of the Work Item Type (e.g. gid://gitlab/WorkItems::Type/TASK).
                            Must be obtained via WORK_ITEM_TYPES_QUERY first.
         hierarchy_parent_id: Global ID of the parent Work Item (only for child Tasks).
-                             Example: "gid://gitlab/WorkItem/123456"
-        label_names: Optional list of label titles to apply
+        label_names: Deprecated for create on many schemas; prefer ``label_ids``.
+            Kept for API compatibility — callers should resolve names to IDs.
+        label_ids: Optional list of label global IDs for ``labelsWidget``.
         assignee_ids: Optional list of user global IDs (e.g. ``gid://gitlab/User/<id>``)
         milestone_id: Optional global ID of a milestone
 
     Returns:
         Dictionary suitable for the `variables` argument of GraphQL execution:
         {"input": { ... all fields ... }}
-
-    Example for a child Task (synthetic IDs only — inject real values from config):
-        build_work_item_create_input(
-            namespace_path=namespace_path,  # from config / env
-            title="Implement login button",
-            work_item_type_id=task_type_id,
-            hierarchy_parent_id=parent_issue_global_id,
-            label_names=["type:docs", "priority:high"],
-            assignee_ids=[assignee_user_gid],  # from config / env
-        )
     """
     input_payload: dict[str, Any] = {
         "namespacePath": namespace_path,
@@ -173,8 +167,14 @@ def build_work_item_create_input(
         # GitLab expects the hierarchyWidget at the top level of the input.
         input_payload["hierarchyWidget"] = {"parentId": hierarchy_parent_id}
 
-    if label_names:
-        input_payload["labelNames"] = label_names
+    # WorkItemWidgetLabelsCreateInput requires labelIds on schemas that reject
+    # top-level labelNames (common on self-hosted Work Items).
+    if label_ids:
+        input_payload["labelsWidget"] = {"labelIds": list(label_ids)}
+    elif label_names:
+        # Last-resort: some GitLab.com versions still accept labelNames.
+        # Prefer client-side resolution to label_ids for portability.
+        input_payload["labelNames"] = list(label_names)
 
     if assignee_ids:
         # Work items use assigneesWidget (not a top-level assigneeIds field).
@@ -184,6 +184,20 @@ def build_work_item_create_input(
         input_payload["milestoneId"] = milestone_id
 
     return {"input": input_payload}
+
+
+PROJECT_LABELS_BY_TITLE_QUERY: str = """
+query ProjectLabelsByTitle($fullPath: ID!, $search: String) {
+  project(fullPath: $fullPath) {
+    labels(searchTerm: $search, first: 50) {
+      nodes {
+        id
+        title
+      }
+    }
+  }
+}
+"""
 
 
 # =============================================================================

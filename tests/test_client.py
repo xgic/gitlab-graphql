@@ -128,11 +128,16 @@ def test_build_work_item_create_input_includes_assignees_and_labels() -> None:
         title="Child task",
         work_item_type_id=type_gid,
         hierarchy_parent_id=parent_gid,
-        label_names=["type:docs", "priority:high"],
+        label_ids=["gid://gitlab/ProjectLabel/1", "gid://gitlab/ProjectLabel/2"],
         assignee_ids=[user_gid],
     )["input"]
     assert payload["namespacePath"] == ns
-    assert payload["labelNames"] == ["type:docs", "priority:high"]
+    assert payload["labelsWidget"] == {
+        "labelIds": [
+            "gid://gitlab/ProjectLabel/1",
+            "gid://gitlab/ProjectLabel/2",
+        ]
+    }
     assert payload["assigneesWidget"] == {"assigneeIds": [user_gid]}
     assert payload["hierarchyWidget"] == {"parentId": parent_gid}
 

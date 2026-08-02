@@ -120,7 +120,7 @@ input WorkItemWidgetHierarchyCreateInput {
 
 ## 5. Response Shape Expectations
 
-All `workItemCreate` calls must request at minimum:
+All `workItemCreate` calls must request a **conservative** selection set that works across GitLab.com and varied self-hosted schemas:
 
 ```graphql
 workItemCreate(input: $input) {
@@ -133,16 +133,15 @@ workItemCreate(input: $input) {
     state
     createdAt
     updatedAt
-    author { ... }
-    # For hierarchy responses (when querying existing items)
+    author { username name }
+    # Do NOT request taskCompletionStatus on create — optional field; absent on some instances.
+    # Labels/assignees via widgets when available:
     widgets {
+      __typename
+      ... on WorkItemWidgetAssignees { assignees { nodes { username name } } }
+      ... on WorkItemWidgetLabels { labels { nodes { title } } }
       ... on WorkItemWidgetHierarchy {
-        parent {
-          id
-        }
-        children {
-          nodes { id title state }
-        }
+        parent { id iid title }
       }
     }
   }

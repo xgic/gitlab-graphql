@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- `workItemCreate` selection set no longer requests `taskCompletionStatus` or top-level `labels` (missing on some self-hosted WorkItem schemas). Labels/assignees read from widgets when present; optional completion status remains `None` on create (#41).
+- Create path uses `labelsWidget.labelIds` after resolving label titles (schemas that reject top-level `labelNames`).
+
 ## [0.1.2rc1] - 2026-07-19
 
 Release candidate for TestPyPI (same content as 0.1.2 final).
