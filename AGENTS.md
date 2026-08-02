@@ -60,9 +60,9 @@ Violations are security incidents: sanitize immediately. Multi-repo policy: http
 When **using** the client from other projects or Grok Build sessions:
 
 1. Install from **PyPI** only: https://pypi.org/project/xgic-gitlab-graphql/  
-   (`uv pip install xgic-gitlab-graphql` — pin `==0.1.2` until a newer minimum is documented).
+   (`uv pip install xgic-gitlab-graphql` — pin a package version such as `==0.1.2` for automation).
 2. Do **not** default to editable `src/` installs of this repo for automation.
-3. Official GitLab EE support tracks versions **GitLab maintains**; see [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md).
+3. **Minimum supported version means GitLab EE**, not the client package version. After upgrade validation with 0.1.2 against current GitLab EE stable, that **EE version** is the support floor (see [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)). GitLab EE support tracks versions **GitLab maintains**.
 4. Do **not** merge compatibility-only changes solely to support outdated self-managed EE pins (see #41 / draft #44 hold).
 
 ## Session Startup Checklist (Run First)

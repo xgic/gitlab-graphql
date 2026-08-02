@@ -33,7 +33,7 @@
 
 ```bash
 uv pip install xgic-gitlab-graphql
-# recommended pin for automation until a newer minimum is declared:
+# pin the package used for automation (e.g. post-upgrade validation):
 uv pip install "xgic-gitlab-graphql==0.1.2"
 ```
 
@@ -55,8 +55,8 @@ Python **3.14+** required. Build/smoke with **uv**. Official releases use OIDC T
 
 See **[docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)** for:
 
-- Minimum / recommended **GitLab EE** versions (aligned with GitLab’s maintenance policy)
-- Minimum **client** version (candidate floor: **0.1.2** after validation on current stable GitLab EE)
+- **Minimum supported version = GitLab EE** (aligned with GitLab’s maintenance policy; set to the current stable EE version after successful validation with PyPI client 0.1.2)
+- Client package pins (e.g. 0.1.2 for validation / automation) vs GitLab EE support floor
 - Policy: do not ship client changes solely to support outdated self-managed EE pins
 
 ## Quick start (Python)
