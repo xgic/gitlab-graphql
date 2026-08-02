@@ -55,6 +55,16 @@ Violations are security incidents: sanitize immediately. Multi-repo policy: http
 
 **Public GitHub writes:** Before `gh issue create|edit`, `gh pr create|edit`, or any public comment on this repository, complete the **mandatory public-safe draft gate** in https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md (fictional placeholders only; never name private hosts, private projects, or private tracker IDs). Optional helper from the hub clone: `python scripts/public-safe-scan.py path/to/draft.md`.
 
+## Consumer / Grok Build usage (outside this repo)
+
+When **using** the client from other projects or Grok Build sessions:
+
+1. Install from **PyPI** only: https://pypi.org/project/xgic-gitlab-graphql/  
+   (`uv pip install xgic-gitlab-graphql` — pin a package version such as `==0.1.2` for automation).
+2. Do **not** default to editable `src/` installs of this repo for automation.
+3. **Minimum supported version means GitLab EE**, not the client package version. After upgrade validation with 0.1.2 against current GitLab EE stable, that **EE version** is the support floor (see [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)). GitLab EE support tracks versions **GitLab maintains**.
+4. Do **not** merge compatibility-only changes solely to support outdated self-managed EE pins (see #41 / draft #44 hold).
+
 ## Session Startup Checklist (Run First)
 
 1. grok inspect
@@ -65,6 +75,7 @@ Violations are security incidents: sanitize immediately. Multi-repo policy: http
 6. Review GitLab GraphQL API docs (EE) and best practices.
 7. Ensure all artifacts complete required fields and use proper tracking.
 8. Confirm drafts are **public-safe** (hard security scan above).
+9. If consuming the client elsewhere in the session: confirm **PyPI** install, not a private editable path.
 
 ## Status Reporting Support
 
