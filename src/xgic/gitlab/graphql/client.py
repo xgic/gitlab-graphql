@@ -35,6 +35,7 @@ from .exceptions import (
 )
 from .graphql.operations import (
     CURRENT_USER_QUERY,
+    PROJECT_LABELS_BY_TITLE_QUERY,
     WORK_ITEM_CREATE_MUTATION,
     WORK_ITEM_TYPES_QUERY,
     WORK_ITEMS_QUERY,
@@ -106,6 +107,8 @@ class GitLabClient:
 
         # Simple in-memory cache for work item type IDs (per namespace)
         self._work_item_type_cache: dict[str, str] = {}
+        # Label title -> global ID cache (per namespace path)
+        self._label_id_cache: dict[str, dict[str, str]] = {}
 
     # -------------------------------------------------------------------------
     # Core Execution Layer
@@ -206,6 +209,43 @@ class GitLabClient:
                 "Unexpected response structure while resolving work item type"
             ) from exc
 
+    def _resolve_label_ids(
+        self, namespace_path: str, label_titles: list[str]
+    ) -> list[str]:
+        """Resolve label titles to global IDs for labelsWidget on create.
+
+        Self-hosted WorkItemCreateInput often only accepts ``labelsWidget.labelIds``,
+        not title-based fields. Missing labels are skipped (no hard fail).
+        """
+        if not label_titles:
+            return []
+        resolved: list[str] = []
+        ns_cache = self._label_id_cache.setdefault(namespace_path, {})
+
+        for title in label_titles:
+            key = title.strip()
+            if not key:
+                continue
+            if key in ns_cache:
+                resolved.append(ns_cache[key])
+                continue
+            data = self._execute(
+                PROJECT_LABELS_BY_TITLE_QUERY,
+                {"fullPath": namespace_path, "search": key},
+            )
+            try:
+                nodes = (data.get("project") or {}).get("labels", {}).get("nodes") or []
+            except AttributeError:
+                nodes = []
+            match = next(
+                (n for n in nodes if str(n.get("title", "")).lower() == key.lower()),
+                None,
+            )
+            if match and match.get("id"):
+                ns_cache[key] = match["id"]
+                resolved.append(match["id"])
+        return resolved
+
     # -------------------------------------------------------------------------
     # Public API - Issue & Task Creation
     # -------------------------------------------------------------------------
@@ -238,13 +278,14 @@ class GitLabClient:
             raise ValueError("namespace_path is required")
 
         issue_type_id = self._get_work_item_type_id("issue", namespace_path)
+        label_ids = self._resolve_label_ids(namespace_path, labels or [])
 
         variables = build_work_item_create_input(
             namespace_path=namespace_path,
             title=title.strip(),
             description=description,
             work_item_type_id=issue_type_id,
-            label_names=labels,
+            label_ids=label_ids or None,
             assignee_ids=assignee_ids,
             milestone_id=milestone_id,
         )
@@ -287,6 +328,7 @@ class GitLabClient:
             raise ValueError("namespace_path is required")
 
         task_type_id = self._get_work_item_type_id("task", namespace_path)
+        label_ids = self._resolve_label_ids(namespace_path, labels or [])
 
         variables = build_work_item_create_input(
             namespace_path=namespace_path,
@@ -294,7 +336,7 @@ class GitLabClient:
             description=description,
             work_item_type_id=task_type_id,
             hierarchy_parent_id=parent_id,
-            label_names=labels,
+            label_ids=label_ids or None,
             assignee_ids=assignee_ids,
         )
 

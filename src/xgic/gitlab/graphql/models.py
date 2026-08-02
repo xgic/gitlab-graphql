@@ -48,9 +48,7 @@ class BaseWorkItem:
             updated_at=cls._parse_datetime(data.get("updatedAt")),
             author=data.get("author"),
             assignees=cls._parse_assignees(data),
-            labels=[
-                node.get("title") for node in data.get("labels", {}).get("nodes", [])
-            ],
+            labels=cls._parse_labels(data),
             milestone=data.get("milestone"),
         )
 
@@ -68,6 +66,31 @@ class BaseWorkItem:
                 assignees = widget.get("assignees") or {}
                 if isinstance(assignees, dict):
                     return assignees.get("nodes", []) or []
+        return []
+
+    @staticmethod
+    def _parse_labels(data: dict[str, Any]) -> list[str]:
+        """Labels may be top-level or on WorkItemWidgetLabels."""
+        top = data.get("labels")
+        if isinstance(top, dict) and top.get("nodes") is not None:
+            return [
+                node.get("title")
+                for node in (top.get("nodes") or [])
+                if isinstance(node, dict) and node.get("title")
+            ]
+        for widget in data.get("widgets") or []:
+            if not isinstance(widget, dict):
+                continue
+            if widget.get("__typename") == "WorkItemWidgetLabels" or (
+                "labels" in widget and widget.get("labels") is not None
+            ):
+                labels = widget.get("labels") or {}
+                if isinstance(labels, dict):
+                    return [
+                        node.get("title")
+                        for node in (labels.get("nodes") or [])
+                        if isinstance(node, dict) and node.get("title")
+                    ]
         return []
 
     @staticmethod
