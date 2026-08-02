@@ -53,6 +53,8 @@ Read this file completely before starting any significant work.
 
 Violations are security incidents: sanitize immediately. Multi-repo policy: https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md
 
+**Public GitHub writes:** Before `gh issue create|edit`, `gh pr create|edit`, or any public comment on this repository, complete the **mandatory public-safe draft gate** in https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md (fictional placeholders only; never name private hosts, private projects, or private tracker IDs). Optional helper from the hub clone: `python scripts/public-safe-scan.py path/to/draft.md`.
+
 ## Session Startup Checklist (Run First)
 
 1. grok inspect
@@ -96,3 +98,4 @@ This session supports exact ID "XGIC GitLab GraphQL Client".
 - GitLab official GraphQL docs for EE Work Items and cursor pagination.
 
 Review and approval required before any remote action or merge to main — see AGENTS.md and BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md.
+
