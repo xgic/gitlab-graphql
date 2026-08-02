@@ -41,6 +41,14 @@ Read this file completely before starting any significant work.
 5. No rule restatement in project artifacts  
 6. Labels applied  
 
+**Mandatory before `gh issue create|edit`, `gh pr create|edit`, or any public comment** (agent gate — do not skip):
+
+1. Draft offline; scan for private hostnames, DNS zones, private project paths, private tracker issue/MR numbers, and real operator identities.  
+2. Replace with **fictional placeholders only** (e.g. `https://gitlab.example.com`, `group/project`, `TOKEN`).  
+3. Prefer describing the defect generically (“self-hosted instance missing field X”) over naming any private deployment.  
+4. Re-scan the **final** body after any edit.  
+5. If a leak was published: **sanitize immediately** (edit/delete), then treat as a security incident (see below).
+
 **Before close:** verify every Markdown checklist item on the issue/PR, mark completed items `- [x]`, and do not close with unchecked required items unless a human documents a waiver. Reviewers (human or future AI) apply the same gate.
 
 Violations are security incidents: sanitize immediately. Multi-repo policy: https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md
