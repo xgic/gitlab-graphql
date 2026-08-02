@@ -29,11 +29,19 @@
 
 ## Installation
 
+**Primary path for Grok Build and all consumers** — install the published package from PyPI:
+
 ```bash
 uv pip install xgic-gitlab-graphql
+# recommended pin for automation until a newer minimum is declared:
+uv pip install "xgic-gitlab-graphql==0.1.2"
 ```
 
+Index: https://pypi.org/project/xgic-gitlab-graphql/
+
 ### Development (editable)
+
+Editable installs are for **working on this repository only** (not the default for agents or production automation):
 
 ```bash
 git clone https://github.com/xgic/gitlab-graphql.git
@@ -42,6 +50,14 @@ uv pip install -e ".[dev]"
 ```
 
 Python **3.14+** required. Build/smoke with **uv**. Official releases use OIDC Trusted Publishing ([python-package-release.md](https://github.com/xgic/ai/blob/main/docs/python-package-release.md)). No Makefiles.
+
+## Compatibility
+
+See **[docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)** for:
+
+- Minimum / recommended **GitLab EE** versions (aligned with GitLab’s maintenance policy)
+- Minimum **client** version (candidate floor: **0.1.2** after validation on current stable GitLab EE)
+- Policy: do not ship client changes solely to support outdated self-managed EE pins
 
 ## Quick start (Python)
 
