@@ -12,12 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- `GitLabClient.create_merge_request()` via GraphQL `mergeRequestCreate` (title, source/target branch, description, labels, assignees); `MergeRequestCreationError` on failure (#51).
+## [0.1.4rc1] - 2026-08-03
 
-### Fixed
-- `workItemCreate` selection set no longer requests `taskCompletionStatus` or top-level `labels` (missing on some self-hosted WorkItem schemas). Labels/assignees read from widgets when present; optional completion status remains `None` on create (#41).
-- Create path uses `labelsWidget.labelIds` after resolving label titles (schemas that reject top-level `labelNames`).
+Release candidate for TestPyPI.
+
+### Added
+- `GitLabClient.create_merge_request()` via GraphQL `mergeRequestCreate` (title, source/target branch, description, labels, assignees); `MergeRequestCreationError` on failure (#51 / #52).
 
 ## [0.1.2rc1] - 2026-07-19
 
