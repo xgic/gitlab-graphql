@@ -87,7 +87,7 @@ See ADR-001 and primary plan for context (high-level only).
 
 ## Release Process Notes (XGIC Internal)
 
-This section documents the recommended release workflow for the `xgic-gitlab-graphql` repository. It aligns with XGICΓÇÖs commitment to selecting optimal, modern tooling and Conventional Commits.
+This section documents the recommended release workflow for the `xgic-gitlab-graphql` repository. It aligns with XGIC’s commitment to selecting optimal, modern tooling and Conventional Commits.
 
 ### Prerequisites
 - Use **`uv`** as the primary package and environment manager.
@@ -123,7 +123,7 @@ This section documents the recommended release workflow for the `xgic-gitlab-gra
    Or use `hatch publish` if preferred.
 
 5. **Create GitHub Release**
-   - Go to **Releases** ΓåÆ **Draft a new release**
+   - Go to **Releases** → **Draft a new release**
    - Select the new tag (created by `hatch version` or manually)
    - Paste the relevant section from `CHANGELOG.md` into the release notes
    - Mark as "Latest release" when appropriate
@@ -146,5 +146,5 @@ uv publish
 - All releases must respect the **XGIC Python Namespace Convention** (`xgic.gitlab.graphql`).
 - For the initial private phase, publishing may be limited to an internal PyPI mirror or direct `pip install -e .` usage until the repository goes public.
 
-This process ensures traceability, reproducibility, and alignment with XGICΓÇÖs engineering standards across all internal and client projects.
+This process ensures traceability, reproducibility, and alignment with XGIC’s engineering standards across all internal and client projects.
 
