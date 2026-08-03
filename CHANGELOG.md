@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-08-03
+
+Final PyPI release (same content as 0.1.4rc1).
+
+### Added
+- GitLabClient.create_merge_request() via GraphQL mergeRequestCreate (title, source/target branch, description, labels, assignees); MergeRequestCreationError on failure (#51 / #52).
+
 ## [0.1.4rc1] - 2026-08-03
 
 Release candidate for TestPyPI.
