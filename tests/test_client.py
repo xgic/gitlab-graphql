@@ -25,9 +25,10 @@ import pytest
 from xgic.gitlab.graphql import GitLabClient
 from xgic.gitlab.graphql.exceptions import (
     AuthenticationError,
+    MergeRequestCreationError,
     WorkItemCreationError,
 )
-from xgic.gitlab.graphql.models import Issue, Task
+from xgic.gitlab.graphql.models import Issue, MergeRequest, Task
 
 # -------------------------------------------------------------------------
 # Fixtures
@@ -246,6 +247,122 @@ def test_get_current_user(mock_client: GitLabClient):
     mock_client._execute.return_value = {"currentUser": {"username": "test-user"}}
     user = mock_client.get_current_user()
     assert user["username"] == "test-user"
+
+
+# -------------------------------------------------------------------------
+# Merge Request create
+# -------------------------------------------------------------------------
+
+
+def test_build_create_merge_request_input() -> None:
+    from xgic.gitlab.graphql.graphql.operations import build_create_merge_request_input
+
+    payload = build_create_merge_request_input(
+        project_path="example-group/example-project",
+        title="feat: add export",
+        source_branch="feature/export",
+        target_branch="main",
+        description="Adds export.",
+        labels=["feature", "backend"],
+        assignee_ids=["gid://gitlab/User/9001"],
+        remove_source_branch=True,
+    )["input"]
+    assert payload["projectPath"] == "example-group/example-project"
+    assert payload["sourceBranch"] == "feature/export"
+    assert payload["targetBranch"] == "main"
+    assert payload["title"] == "feat: add export"
+    assert payload["labels"] == ["feature", "backend"]
+    assert payload["assigneeIds"] == ["gid://gitlab/User/9001"]
+    assert payload["removeSourceBranch"] is True
+
+
+def test_merge_request_from_graphql() -> None:
+    data = {
+        "id": "gid://gitlab/MergeRequest/55",
+        "iid": 7,
+        "title": "feat: add export",
+        "description": "Adds export.",
+        "webUrl": "https://gitlab.example.com/group/project/-/merge_requests/7",
+        "state": "opened",
+        "sourceBranch": "feature/export",
+        "targetBranch": "main",
+        "labels": {"nodes": [{"title": "feature"}]},
+    }
+    mr = MergeRequest.from_graphql(data)
+    assert mr.iid == 7
+    assert mr.source_branch == "feature/export"
+    assert mr.labels == ["feature"]
+
+
+def test_create_merge_request_happy_path(mock_client: GitLabClient) -> None:
+    mock_client._execute.return_value = {
+        "mergeRequestCreate": {
+            "mergeRequest": {
+                "id": "gid://gitlab/MergeRequest/55",
+                "iid": 7,
+                "title": "feat: add export",
+                "description": "body",
+                "webUrl": "https://gitlab.example.com/g/p/-/merge_requests/7",
+                "state": "opened",
+                "sourceBranch": "feature/export",
+                "targetBranch": "main",
+                "labels": {"nodes": [{"title": "feature"}]},
+            },
+            "errors": [],
+        }
+    }
+    mr = mock_client.create_merge_request(
+        title="feat: add export",
+        source_branch="feature/export",
+        namespace_path="example-group/example-project",
+        target_branch="main",
+        description="body",
+        labels=["feature"],
+    )
+    assert isinstance(mr, MergeRequest)
+    assert mr.iid == 7
+    assert mr.title == "feat: add export"
+    mock_client._execute.assert_called_once()
+    call_args = mock_client._execute.call_args
+    variables = call_args[0][1]
+    assert variables["input"]["projectPath"] == "example-group/example-project"
+    assert variables["input"]["sourceBranch"] == "feature/export"
+
+
+def test_create_merge_request_raises_on_errors(mock_client: GitLabClient) -> None:
+    mock_client._execute.return_value = {
+        "mergeRequestCreate": {
+            "mergeRequest": None,
+            "errors": ["Source branch does not exist"],
+        }
+    }
+    with pytest.raises(MergeRequestCreationError, match="Source branch"):
+        mock_client.create_merge_request(
+            title="feat: broken",
+            source_branch="missing-branch",
+            namespace_path="example-group/example-project",
+        )
+
+
+def test_create_merge_request_requires_fields(mock_client: GitLabClient) -> None:
+    with pytest.raises(ValueError, match="title"):
+        mock_client.create_merge_request(
+            title="  ",
+            source_branch="feature/x",
+            namespace_path="example-group/example-project",
+        )
+    with pytest.raises(ValueError, match="source_branch"):
+        mock_client.create_merge_request(
+            title="feat: x",
+            source_branch="",
+            namespace_path="example-group/example-project",
+        )
+    with pytest.raises(ValueError, match="namespace_path"):
+        mock_client.create_merge_request(
+            title="feat: x",
+            source_branch="feature/x",
+            namespace_path="",
+        )
 
 
 def test_create_issue_with_tasks_partial_failure(

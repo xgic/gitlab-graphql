@@ -169,22 +169,24 @@ def create_issue_with_tasks(
     """
 ```
 
-#### `create_merge_request` (stub, not implemented)
+#### `create_merge_request` (implemented)
 
 ```python
 def create_merge_request(
     self,
     title: str,
-    description: str = "",
     source_branch: str,
+    *,
+    namespace_path: str,
     target_branch: str = "main",
+    description: str = "",
     labels: Optional[List[str]] = None,
+    assignee_ids: Optional[List[str]] = None,
+    remove_source_branch: Optional[bool] = None,
 ) -> MergeRequest:
     """
-    Placeholder for Merge Request creation (raises NotImplementedError).
-
-    Phase 1 scope is intentionally minimal. Future versions will add
-    support for draft status, assignee, reviewer, etc.
+    Create a Merge Request via GraphQL mergeRequestCreate.
+    namespace_path is the full project path (e.g. group/project).
     """
 ```
 

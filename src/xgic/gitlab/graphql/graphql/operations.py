@@ -201,20 +201,26 @@ query ProjectLabelsByTitle($fullPath: ID!, $search: String) {
 
 
 # =============================================================================
-# FUTURE OPERATIONS (Placeholders)
+# MERGE REQUEST CREATE
 # =============================================================================
-# These will be implemented as the client scope expands (Merge Requests,
-# Releases, Milestones, time tracking via custom fields / notes, etc.).
 
 CREATE_MERGE_REQUEST_MUTATION: str = """
-# Placeholder - to be implemented when create_merge_request() is added to public API
 mutation CreateMergeRequest($input: MergeRequestCreateInput!) {
   mergeRequestCreate(input: $input) {
     mergeRequest {
       id
       iid
       title
+      description
       webUrl
+      state
+      sourceBranch
+      targetBranch
+      labels {
+        nodes {
+          title
+        }
+      }
     }
     errors
   }
@@ -228,21 +234,37 @@ def build_create_merge_request_input(
     source_branch: str,
     target_branch: str = "main",
     description: str = "",
-    label_names: list[str] | None = None,
+    labels: list[str] | None = None,
+    assignee_ids: list[str] | None = None,
+    remove_source_branch: bool | None = None,
 ) -> dict[str, Any]:
-    """Placeholder builder for Merge Request creation variables.
-    Will be completed when the corresponding public method is implemented.
+    """Build variables for ``mergeRequestCreate``.
+
+    Args:
+        project_path: Full project path (e.g. ``group/project``).
+        title: MR title.
+        source_branch: Source branch name.
+        target_branch: Target branch name (default ``main``).
+        description: Optional Markdown description.
+        labels: Optional label **titles** (GitLab ``labels`` string list).
+        assignee_ids: Optional user global IDs.
+        remove_source_branch: Optional delete-source-branch flag.
     """
-    return {
-        "input": {
-            "projectPath": project_path,
-            "title": title,
-            "sourceBranch": source_branch,
-            "targetBranch": target_branch,
-            "description": description,
-            "labelNames": label_names or [],
-        }
+    input_payload: dict[str, Any] = {
+        "projectPath": project_path,
+        "title": title,
+        "sourceBranch": source_branch,
+        "targetBranch": target_branch,
+        "description": description or "",
     }
+    if labels:
+        # MergeRequestCreateInput uses a list of label titles (not label GIDs).
+        input_payload["labels"] = [str(x).strip() for x in labels if str(x).strip()]
+    if assignee_ids:
+        input_payload["assigneeIds"] = list(assignee_ids)
+    if remove_source_branch is not None:
+        input_payload["removeSourceBranch"] = bool(remove_source_branch)
+    return {"input": input_payload}
 
 
 # =============================================================================

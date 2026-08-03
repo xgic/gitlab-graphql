@@ -54,7 +54,7 @@ xgic-gitlab-graphql/
   - `create_issue(...)`
   - `create_task(parent_id, ...)`
   - `create_issue_with_tasks(issue_title, tasks=[...])` ← **highly recommended for Grok Build**
-  - `create_merge_request(...)` (stub)
+  - `create_merge_request(...)`
   - Future: `update_work_item(...)`, `get_work_item(...)`, bulk operations, etc.
 - All GraphQL execution funnels through a private `_execute(query, variables)` method.
 - Handles authentication header injection, timeout, basic retry logic, and error translation.
