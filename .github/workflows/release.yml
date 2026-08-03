@@ -1,6 +1,7 @@
 # Public Python package release — https://github.com/xgic/ai/blob/main/docs/python-package-release.md
 # Auth: OIDC Trusted Publishing only (no long-lived PyPI tokens).
 # Tags: vX.Y.ZrcN → TestPyPI; vX.Y.Z (no rc) → PyPI.
+# Final tags are blocked unless a matching RC tag (vX.Y.ZrcN) already exists.
 
 name: Release
 
@@ -25,6 +26,19 @@ jobs:
         with:
           python-version: "3.14"
 
+      - name: Assert pyproject version matches tag
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          TAG_VER="${TAG#v}"
+          PY_VER="$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")"
+          if [ "${PY_VER}" != "${TAG_VER}" ]; then
+            echo "::error::pyproject.toml version (${PY_VER}) must match tag version (${TAG_VER})"
+            exit 1
+          fi
+          echo "Version OK: ${PY_VER}"
+
       - name: Build
         run: uv build
 
@@ -33,6 +47,37 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
+
+  # Final (non-rc) tags must follow RC → TestPyPI → smoke before PyPI.
+  # See docs/RELEASE.md and hub python-package-release.md §7–8.
+  require-prior-rc:
+    name: Require prior RC tag (final only)
+    if: ${{ !contains(github.ref_name, 'rc') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout with tags
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fail if no vX.Y.ZrcN tag exists for this final version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git fetch --tags --force origin
+          VER="${TAG#v}"
+          # Match v0.1.3rc1, v0.1.3rc2, ... (not v0.1.30rc1)
+          mapfile -t RC_TAGS < <(git tag -l "v${VER}rc*" | sort -V)
+          if [ "${#RC_TAGS[@]}" -eq 0 ]; then
+            echo "::error::Final tag ${TAG} is not allowed without a prior RC tag."
+            echo "XGIC standard: bump to ${VER}rc1 → tag v${VER}rc1 → TestPyPI smoke + GitHub prerelease,"
+            echo "then bump to ${VER} → tag v${VER} → PyPI."
+            echo "See https://github.com/xgic/ai/blob/main/docs/python-package-release.md and docs/RELEASE.md"
+            exit 1
+          fi
+          echo "Prior RC tag(s) found for ${VER}:"
+          printf '  %s\n' "${RC_TAGS[@]}"
 
   publish-testpypi:
     name: Publish to TestPyPI
@@ -93,7 +138,7 @@ jobs:
   publish-pypi:
     name: Publish to PyPI
     if: ${{ !contains(github.ref_name, 'rc') }}
-    needs: [build]
+    needs: [build, require-prior-rc]
     runs-on: ubuntu-latest
     environment:
       name: pypi

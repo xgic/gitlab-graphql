@@ -60,10 +60,28 @@ Violations are security incidents: sanitize immediately. Multi-repo policy: http
 When **using** the client from other projects or Grok Build sessions:
 
 1. Install from **PyPI** only: https://pypi.org/project/xgic-gitlab-graphql/  
-   (`uv pip install xgic-gitlab-graphql` — pin a package version such as `==0.1.2` for automation).
+   (`uv pip install xgic-gitlab-graphql` — pin a package version such as `==0.1.3` for automation).
 2. Do **not** default to editable `src/` installs of this repo for automation.
-3. **Minimum supported version means GitLab EE**, not the client package version. After upgrade validation with 0.1.2 against current GitLab EE stable, that **EE version** is the support floor (see [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md)). GitLab EE support tracks versions **GitLab maintains**.
-4. Do **not** merge compatibility-only changes solely to support outdated self-managed EE pins (see #41 / draft #44 hold).
+3. **Minimum supported version means GitLab EE**, not the client package version. See [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md). GitLab EE support tracks versions **GitLab maintains**.
+4. Do **not** merge compatibility-only changes solely to support outdated self-managed EE pins.
+
+## Package release (mandatory RC → TestPyPI → final → PyPI)
+
+**Authority:** https://github.com/xgic/ai/blob/main/docs/python-package-release.md  
+**Local checklist:** [docs/RELEASE.md](docs/RELEASE.md)  
+**CI:** `.github/workflows/release.yml` (tag-driven)
+
+Agents and operators **must not** skip the release candidate:
+
+1. Merge feature work to `main` (human UI approval).  
+2. **RC PR:** set `pyproject.toml` version to `X.Y.ZrcN`, changelog; human merge.  
+3. Tag **`vX.Y.ZrcN`** only after LGTM for the RC step → TestPyPI publish + smoke + GitHub **prerelease**.  
+4. **Final PR:** set version to `X.Y.Z`; human merge.  
+5. Tag **`vX.Y.Z`** only after LGTM for the final step **and** successful RC for that line → PyPI + smoke + GitHub Release.
+
+**Forbidden:** tagging `vX.Y.Z` (no `rc`) without a prior `vX.Y.ZrcN` tag; inventing a “CI on main is enough” shortcut; publishing from a laptop; agent-merging release PRs or pushing release tags without explicit human LGTM for that RC/final step.
+
+Final Release jobs **fail** if no matching RC tag exists (`Require prior RC tag`).
 
 ## Session Startup Checklist (Run First)
 
