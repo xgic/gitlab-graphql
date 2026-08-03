@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.3] - 2026-08-02
+
+### Fixed
+- Portable Work Item create selection and labelsWidget IDs for self-hosted GitLab EE schemas missing `taskCompletionStatus` (https://github.com/xgic/gitlab-graphql/issues/41, https://github.com/xgic/gitlab-graphql/pull/44).
+
 All notable changes to the **XGIC GitLab GraphQL Client** (`xgic-gitlab-graphql`) will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
