@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "xgic-gitlab-graphql"
-version = "0.1.3"
+version = "0.1.4rc1"
 description = "XGIC GitLab GraphQL Client — A high-level, extensible Python client for GitLab's GraphQL API with first-class support for Work Items, hierarchical Tasks, Merge Requests, and automation use cases (including Grok Build)."
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -152,4 +152,5 @@ exclude = [
 # - Build backend: hatchling (PEP 420, uv compatibility). Use `uv` or `pip` for install/dev.
 # - Tooling: ruff (lint + format + Google docstrings), pyright (type check), pytest.
 # - No Makefiles. Use pyproject + uv/pip/hatch scripts for all tasks.
+
 
