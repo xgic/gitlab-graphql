@@ -13,6 +13,7 @@ from .exceptions import (
     ConfigurationError,
     GitLabError,
     GraphQLError,
+    MergeRequestCreationError,
     WorkItemCreationError,
 )
 from .models import BaseWorkItem, Issue, MergeRequest, Task
@@ -24,6 +25,7 @@ __all__ = [
     "GraphQLError",
     "AuthenticationError",
     "WorkItemCreationError",
+    "MergeRequestCreationError",
     "ConfigurationError",
     "BaseWorkItem",
     "Issue",

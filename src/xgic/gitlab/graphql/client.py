@@ -31,14 +31,17 @@ from .exceptions import (
     AuthenticationError,
     GitLabError,
     GraphQLError,
+    MergeRequestCreationError,
     WorkItemCreationError,
 )
 from .graphql.operations import (
+    CREATE_MERGE_REQUEST_MUTATION,
     CURRENT_USER_QUERY,
     PROJECT_LABELS_BY_TITLE_QUERY,
     WORK_ITEM_CREATE_MUTATION,
     WORK_ITEM_TYPES_QUERY,
     WORK_ITEMS_QUERY,
+    build_create_merge_request_input,
     build_work_item_create_input,
     build_work_item_types_variables,
     build_work_items_variables,
@@ -592,7 +595,7 @@ class GitLabClient:
         return data.get("currentUser", {})
 
     # -------------------------------------------------------------------------
-    # Placeholder for future expansion
+    # Merge Requests
     # -------------------------------------------------------------------------
 
     def create_merge_request(
@@ -604,16 +607,62 @@ class GitLabClient:
         target_branch: str = "main",
         description: str = "",
         labels: list[str] | None = None,
+        assignee_ids: list[str] | None = None,
+        remove_source_branch: bool | None = None,
     ) -> MergeRequest:
-        """Placeholder for Merge Request creation.
+        """Create a Merge Request via ``mergeRequestCreate``.
 
-        Will be implemented when the corresponding GraphQL mutation and
-        builder in operations.py are completed.
+        Args:
+            title: Merge request title.
+            source_branch: Source branch name (must exist on the project).
+            namespace_path: Full GitLab **project** path (e.g. ``group/project``).
+            target_branch: Target branch name (default ``main``).
+            description: Optional Markdown description.
+            labels: Optional label titles to apply at create time.
+            assignee_ids: Optional user global IDs (``gid://gitlab/User/N``).
+            remove_source_branch: If set, request delete-source-branch on merge.
+
+        Returns:
+            :class:`MergeRequest` domain model for the created MR.
+
+        Raises:
+            ValueError: Missing required title, branches, or project path.
+            MergeRequestCreationError: GitLab returned errors or no MR payload.
+            AuthenticationError / GraphQLError / GitLabError: From ``_execute``.
         """
-        raise NotImplementedError(
-            "create_merge_request() is not yet implemented. "
-            "See docs/GRAPHQL_OPERATIONS_CONTRACT.md for the planned shape."
+        if not title or not title.strip():
+            raise ValueError("Merge request title cannot be empty")
+        if not source_branch or not source_branch.strip():
+            raise ValueError("source_branch is required")
+        if not target_branch or not target_branch.strip():
+            raise ValueError("target_branch is required")
+        if not namespace_path or not namespace_path.strip():
+            raise ValueError("namespace_path is required (full project path)")
+
+        variables = build_create_merge_request_input(
+            project_path=namespace_path.strip(),
+            title=title.strip(),
+            source_branch=source_branch.strip(),
+            target_branch=target_branch.strip(),
+            description=description or "",
+            labels=labels,
+            assignee_ids=assignee_ids,
+            remove_source_branch=remove_source_branch,
         )
+
+        data = self._execute(CREATE_MERGE_REQUEST_MUTATION, variables)
+        payload = data.get("mergeRequestCreate") or {}
+        mr_data = payload.get("mergeRequest")
+        errors = payload.get("errors") or []
+
+        if not mr_data:
+            raise MergeRequestCreationError(
+                f"Failed to create merge request: {errors or 'no mergeRequest in response'}",
+                project_path=namespace_path.strip(),
+                errors=errors if isinstance(errors, list) else [errors],
+            )
+
+        return MergeRequest.from_graphql(mr_data)
 
     # -------------------------------------------------------------------------
     # Convenience / Future Methods (stubs for extensibility)

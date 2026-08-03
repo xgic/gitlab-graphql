@@ -19,7 +19,7 @@
 
 ## Key features (phase 1)
 
-- High-level methods: `create_issue()`, `create_task(parent_id)`, `create_issue_with_tasks()` (create_merge_request() is a placeholder stub)
+- High-level methods: `create_issue()`, `create_task(parent_id)`, `create_issue_with_tasks()`, `create_merge_request()`
 - Proper parent-child Task hierarchy via GitLab Work Items
 - Clean data models (`Issue`, `Task`, `MergeRequest`) instead of raw dicts
 - Centralized error handling and GraphQL execution

@@ -84,6 +84,21 @@ class WorkItemCreationError(GitLabError):
         self.failed_tasks = failed_tasks or []
 
 
+class MergeRequestCreationError(GitLabError):
+    """Raised when ``mergeRequestCreate`` fails or returns no merge request."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        project_path: str | None = None,
+        errors: list[Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.project_path = project_path
+        self.errors = errors or []
+
+
 class ConfigurationError(GitLabError):
     """Raised for invalid client configuration (e.g. missing token, bad URL)."""
 
