@@ -18,6 +18,16 @@ Thank you for contributing to [xgic/gitlab-graphql](https://github.com/xgic/gitl
 - Positive, professional tone
 - Public-safe content only (no private hosts, private tracker IDs, internal paths, or secrets)
 
+## Local Python environment (this package)
+
+This repository is a **pure Python library**. Prefer **`uv`** for local development:
+
+```bash
+uv sync --dev
+```
+
+**Open this repository folder** as the VS Code workspace when doing Python work (language server, tests, integrated terminal). Avoid relying on a parent multi-folder workspace to auto-activate this project’s `.venv` for unrelated terminals—that can pollute orchestration shells with the wrong environment. See dual-mode Python guidance in [BASE-STANDARDS](https://github.com/xgic/ai/blob/main/docs/BASE-STANDARDS-FOR-ORCHESTRATED-REPOS.md) (item on dual-mode development environments).
+
 ## Multi-repo standards
 
 Link portfolio standards rather than copying them:
