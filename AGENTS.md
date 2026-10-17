@@ -39,7 +39,7 @@ Read this file completely before starting any significant work.
 3. No private local paths  
 4. No hard-coded private paths/user IDs in tests or examples  
 5. No rule restatement in project artifacts  
-6. Labels applied  
+6. Exactly one type label applied: `bug`, `enhancement`, `documentation`, `standards`, or `chore`. Welcome Discussion posts also use `welcome`. https://github.com/xgic/ai/blob/main/docs/community-health.md#labels-required  
 
 **Mandatory before `gh issue create|edit`, `gh pr create|edit`, or any public comment** (agent gate — do not skip):
 
