@@ -79,6 +79,8 @@ Agents and operators **must not** skip the release candidate:
 4. **Final PR:** set version to `X.Y.Z`; human merge.  
 5. Tag **`vX.Y.Z`** only after LGTM for the final step **and** successful RC for that line → PyPI + smoke + GitHub Release.
 
+The release milestone is titled `X.Y.Z`, matching the published version. Set it on every issue and pull request included in the release. GitHub does not copy the issue milestone onto the pull request. The candidate and the final publish share it. When the shipped version changes, move both to that `X.Y.Z` before the milestone closes. Close the parent issue, then the milestone, after the final publish and its acceptance. https://github.com/xgic/ai/blob/main/docs/work-tracking-and-checklists.md
+
 **Forbidden:** tagging `vX.Y.Z` (no `rc`) without a prior `vX.Y.ZrcN` tag; inventing a “CI on main is enough” shortcut; publishing from a laptop; agent-merging release PRs or pushing release tags without explicit human LGTM for that RC/final step.
 
 Final Release jobs **fail** if no matching RC tag exists (`Require prior RC tag`).
