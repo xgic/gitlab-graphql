@@ -15,6 +15,8 @@ This document is the **repo-local** checklist. It does not replace the hub stand
 
 **Never** cut a final tag (`vX.Y.Z` without `rc`) before a successful RC for the same `X.Y.Z` line has been published to TestPyPI and smoked.
 
+The repository milestone for that line is titled `X.Y.Z`. The candidate and the final publish share it. Set it on every issue and pull request included in the release. GitHub does not copy the issue milestone onto the pull request. Close the parent issue, then the milestone, after the final publish and its acceptance. [Work tracking](https://github.com/xgic/ai/blob/main/docs/work-tracking-and-checklists.md).
+
 CI enforces this: the Release workflow **fails final tags** unless a prior `vX.Y.Zrc*` tag exists (job `Require prior RC tag`).
 
 ## Operator / agent sequence
